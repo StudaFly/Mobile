@@ -1,0 +1,8 @@
+appId: com.studafly.app
+---
+- launchApp
+- assertVisible: "StudaFly"
+- tapOn: "Mon profil"
+- assertVisible: "Paramètres"
+- back
+- assertVisible: "StudaFly"

@@ -1,0 +1,5 @@
+appId: com.studafly.app
+---
+- launchApp
+- assertVisible: "StudaFly"
+- assertVisible: "Open up App.tsx"

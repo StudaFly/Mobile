@@ -1,0 +1,12 @@
+appId: com.studafly.app
+---
+- launchApp
+- tapOn: "Se connecter"
+- tapOn:
+    id: "email-input"
+- inputText: "test@studafly.com"
+- tapOn:
+    id: "password-input"
+- inputText: "password123"
+- tapOn: "Connexion"
+- assertVisible: "Bienvenue"
