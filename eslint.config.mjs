@@ -7,7 +7,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 export default [
   js.configs.recommended,
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
@@ -46,7 +46,7 @@ export default [
     },
   },
   {
-    files: ["**/*.js"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       globals: {
         module: "readonly",
