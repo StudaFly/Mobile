@@ -28,6 +28,7 @@ import { MobilityTypeCard } from '../../../src/features/auth/components/Mobility
 
 // Auth screens
 import { LoginScreen } from '../../../src/features/auth/screens/LoginScreen';
+import { RegisterScreen } from '../../../src/features/auth/screens/RegisterScreen';
 import { CreateProfileScreen } from '../../../src/features/auth/screens/CreateProfileScreen';
 import { OnboardingScreen } from '../../../src/features/auth/screens/OnboardingScreen';
 import { SplashScreen } from '../../../src/features/auth/screens/SplashScreen';
@@ -187,6 +188,14 @@ describe('Auth screens render without crashing', () => {
   it('LoginScreen renders', () => {
     const { UNSAFE_root } = render(
       <LoginScreen navigation={mockNavigation as any} route={{} as any} />,
+      { wrapper: Wrapper },
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('RegisterScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <RegisterScreen navigation={mockNavigation as any} route={{} as any} />,
       { wrapper: Wrapper },
     );
     expect(UNSAFE_root).toBeDefined();

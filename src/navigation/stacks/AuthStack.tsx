@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   SplashScreen,
   LoginScreen,
+  RegisterScreen,
   CreateProfileScreen,
   OnboardingScreen,
 } from '@/features/auth';
@@ -15,6 +16,7 @@ export function AuthStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="Register" component={RegisterScreen} />
       <Stack.Screen name="CreateProfile" component={CreateProfileScreen} />
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
     </Stack.Navigator>

@@ -15,6 +15,7 @@ export type {
 } from './types/auth.types';
 export { SplashScreen } from './screens/SplashScreen';
 export { LoginScreen } from './screens/LoginScreen';
+export { RegisterScreen } from './screens/RegisterScreen';
 export { CreateProfileScreen } from './screens/CreateProfileScreen';
 export { OnboardingScreen } from './screens/OnboardingScreen';
 export { OAuthButton } from './components/OAuthButton';

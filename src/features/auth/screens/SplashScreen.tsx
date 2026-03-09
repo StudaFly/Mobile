@@ -55,10 +55,10 @@ export function SplashScreen({ navigation }: Props) {
           <Button
             label="Commencer mon aventure →"
             fullWidth
-            onPress={() => navigation.navigate('Login', { initialTab: 'register' })}
+            onPress={() => navigation.navigate('Register')}
           />
           <TouchableOpacity
-            onPress={() => navigation.navigate('Login', { initialTab: 'login' })}
+            onPress={() => navigation.navigate('Login')}
             style={styles.loginLink}
           >
             <Text variant="caption" style={styles.loginLinkText}>
