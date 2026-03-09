@@ -166,7 +166,7 @@ describe('Auth feature components render without crashing', () => {
 
   it('MobilityTypeCard renders', () => {
     const { UNSAFE_root } = render(
-      <MobilityTypeCard value="erasmus" label="Erasmus" emoji="🇪🇺" selected={false} onSelect={jest.fn()} />,
+      <MobilityTypeCard value="erasmus" label="Erasmus" iconName="Globe" selected={false} onSelect={jest.fn()} />,
     );
     expect(UNSAFE_root).toBeDefined();
   });
@@ -202,7 +202,7 @@ describe('Auth screens render without crashing', () => {
 
   it('OnboardingScreen renders', () => {
     const { UNSAFE_root } = render(
-      <OnboardingScreen navigation={mockNavigation as any} route={{} as any} />,
+      <OnboardingScreen />,
       { wrapper: Wrapper },
     );
     expect(UNSAFE_root).toBeDefined();

@@ -20,11 +20,11 @@ const mockAuthResponse = {
 
 describe('authService', () => {
   beforeAll(() => {
-    (global as Record<string, unknown>).__DEV__ = false;
+    (globalThis as Record<string, unknown>).__DEV__ = false;
   });
 
   afterAll(() => {
-    (global as Record<string, unknown>).__DEV__ = true;
+    (globalThis as Record<string, unknown>).__DEV__ = true;
   });
 
   beforeEach(() => {
