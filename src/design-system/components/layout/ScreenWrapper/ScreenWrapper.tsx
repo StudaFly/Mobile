@@ -6,7 +6,7 @@ interface ScreenWrapperProps extends ViewProps { children: React.ReactNode; }
 export function ScreenWrapper({ children, style }: ScreenWrapperProps) {
   return (
     <SafeAreaView style={[styles.safe, style]}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         {children}
       </KeyboardAvoidingView>
     </SafeAreaView>

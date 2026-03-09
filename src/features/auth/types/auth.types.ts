@@ -1,5 +1,6 @@
 export type UserRole = 'student' | 'admin' | 'superadmin';
 export type OAuthProvider = 'google' | 'microsoft' | 'apple';
+export type MobilityTypeOption = 'erasmus' | 'stage' | 'semestre' | 'double_diplome';
 
 export interface AuthUser {
   id: string;
@@ -15,6 +16,34 @@ export interface AuthUser {
 export interface LoginPayload {
   email: string;
   password: string;
+}
+
+export interface RegisterPayload {
+  email: string;
+  password: string;
+  name: string;
+}
+
+export interface OAuthLoginPayload {
+  provider: OAuthProvider;
+  mockToken: string;
+}
+
+export interface CreateProfilePayload {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  institution?: string;
+  enableNotifications: boolean;
+  avatarEmoji?: string;
+  profilePictureUri?: string;
+}
+
+export interface OnboardingData {
+  mobilityType: MobilityTypeOption | null;
+  destination: string;
+  departureDate: string;
+  school: string;
 }
 
 export interface AuthState {

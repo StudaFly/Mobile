@@ -21,6 +21,8 @@ export default [
         require: "readonly",
         process: "readonly",
         __dirname: "readonly",
+        __DEV__: "readonly",
+        global: "readonly",
         describe: "readonly",
         it: "readonly",
         expect: "readonly",
@@ -53,6 +55,12 @@ export default [
         require: "readonly",
         __dirname: "readonly",
       },
+    },
+  },
+  {
+    files: ["tests/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
   {

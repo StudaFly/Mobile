@@ -6,7 +6,7 @@ export type RootStackParamList = {
 
 export type AuthStackParamList = {
   Splash: undefined;
-  Login: undefined;
+  Login: { initialTab?: 'login' | 'register' } | undefined;
   CreateProfile: undefined;
   Onboarding: undefined;
 };
