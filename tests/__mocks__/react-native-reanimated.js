@@ -34,6 +34,13 @@ const Reanimated = {
   cancelAnimation: jest.fn(),
   measure: jest.fn(),
   scrollTo: jest.fn(),
+  FadeIn: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  FadeOut: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  FadeInDown: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  FadeInUp: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  SlideInRight: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  SlideOutLeft: { duration: jest.fn().mockReturnThis(), delay: jest.fn().mockReturnThis() },
+  Layout: { duration: jest.fn().mockReturnThis() },
   Animated: {
     View: 'Animated.View',
     Text: 'Animated.Text',

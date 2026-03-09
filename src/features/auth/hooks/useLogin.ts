@@ -9,3 +9,19 @@ export function useLogin() {
     onSuccess: ({ user, accessToken }) => setUser(user, accessToken),
   });
 }
+
+export function useOAuthLogin() {
+  const setUser = useAuthStore((s) => s.setUser);
+  return useMutation({
+    mutationFn: authService.oauthLogin,
+    onSuccess: ({ user, accessToken }) => setUser(user, accessToken),
+  });
+}
+
+export function useRegister() {
+  const setPendingAuth = useAuthStore((s) => s.setPendingAuth);
+  return useMutation({
+    mutationFn: authService.register,
+    onSuccess: ({ user, accessToken }) => setPendingAuth(user, accessToken),
+  });
+}

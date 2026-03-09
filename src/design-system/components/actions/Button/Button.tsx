@@ -1,7 +1,8 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { TouchableScale } from '@/design-system/primitives/TouchableScale';
 import { Text } from '@/design-system/primitives/Text';
+import { Icon } from '@/design-system/primitives/Icon';
 import { colors, spacing, radii } from '@/design-system/tokens';
 import { ButtonProps } from './Button.types';
 
@@ -24,7 +25,7 @@ const variantStyles = {
   },
 };
 
-export function Button({ variant = 'primary', label, isLoading, fullWidth, style, ...props }: ButtonProps) {
+export function Button({ variant = 'primary', label, isLoading, fullWidth, style, iconRight, ...props }: ButtonProps) {
   const { container, label: labelStyle } = variantStyles[variant];
 
   return (
@@ -35,9 +36,12 @@ export function Button({ variant = 'primary', label, isLoading, fullWidth, style
       {isLoading ? (
         <ActivityIndicator color={labelStyle.color} />
       ) : (
-        <Text variant="label" style={labelStyle}>
-          {label}
-        </Text>
+        <View style={styles.content}>
+          <Text variant="label" style={labelStyle}>
+            {label}
+          </Text>
+          {iconRight && <Icon name={iconRight} size={16} color={labelStyle.color} />}
+        </View>
       )}
     </TouchableScale>
   );
@@ -54,5 +58,10 @@ const styles = StyleSheet.create({
   },
   fullWidth: {
     width: '100%',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
   },
 });

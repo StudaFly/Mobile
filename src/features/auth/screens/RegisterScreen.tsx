@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
@@ -9,31 +9,41 @@ import { colors, spacing } from '@/design-system/tokens';
 import { AuthStackParamList } from '@/navigation/types';
 import { OAuthButton } from '../components/OAuthButton';
 import { StudaFlyLogo } from '../components/StudaFlyLogo';
-import { useLogin, useOAuthLogin } from '../hooks/useLogin';
+import { useOAuthLogin, useRegister } from '../hooks/useLogin';
 import { OAuthProvider } from '../types/auth.types';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
+type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
 const DARK_PLACEHOLDER_COLOR = 'rgba(255,255,255,0.55)';
 const OAUTH_PROVIDERS: OAuthProvider[] = ['google', 'apple', 'microsoft'];
 
-export function LoginScreen({ navigation }: Props) {
+export function RegisterScreen({ navigation }: Props) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { mutate: login, isPending: loginPending, error: loginError } = useLogin();
   const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
+  const { mutate: register, isPending: registerPending, isSuccess: registerSuccess } = useRegister();
 
-  const isAnyLoading = loginPending || oauthPending;
+  const isAnyLoading = oauthPending || registerPending;
 
-  const handleLogin = () => {
-    if (!email.trim() || !password.trim()) return;
-    login({ email: email.trim(), password });
+  const handleRegister = () => {
+    if (!name.trim() || !email.trim() || !password.trim()) return;
+    register(
+      { name: name.trim(), email: email.trim(), password },
+      { onSuccess: () => navigation.navigate('CreateProfile') },
+    );
   };
 
   const handleOAuth = (provider: OAuthProvider) => {
     oauthLogin({ provider, mockToken: `mock-${provider}-token` });
   };
+
+  useEffect(() => {
+    if (registerSuccess) {
+      navigation.navigate('CreateProfile');
+    }
+  }, [registerSuccess, navigation]);
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -45,7 +55,7 @@ export function LoginScreen({ navigation }: Props) {
         <View style={styles.header}>
           <StudaFlyLogo size={72} />
           <Text variant="heading1" style={styles.title}>StudaFly</Text>
-          <Text variant="body" style={styles.subtitle}>Bon retour parmi nous !</Text>
+          <Text variant="body" style={styles.subtitle}>Crée ton compte gratuitement</Text>
         </View>
 
         <View style={styles.oauthSection}>
@@ -67,6 +77,16 @@ export function LoginScreen({ navigation }: Props) {
 
         <View style={styles.form}>
           <TextInput
+            label="Prénom et nom"
+            placeholder="Lucas Martin"
+            autoCapitalize="words"
+            autoComplete="name"
+            value={name}
+            onChangeText={setName}
+            style={styles.inputDark}
+            placeholderTextColor={DARK_PLACEHOLDER_COLOR}
+          />
+          <TextInput
             label="Email"
             placeholder="ton@email.com"
             keyboardType="email-address"
@@ -81,26 +101,25 @@ export function LoginScreen({ navigation }: Props) {
             label="Mot de passe"
             placeholder="••••••••"
             secureTextEntry
-            autoComplete="password"
+            autoComplete="new-password"
             value={password}
             onChangeText={setPassword}
             style={styles.inputDark}
             placeholderTextColor={DARK_PLACEHOLDER_COLOR}
-            error={loginError ? 'Email ou mot de passe incorrect' : undefined}
           />
           <Button
-            label="Se connecter"
+            label="Créer mon compte"
             fullWidth
-            isLoading={loginPending}
-            onPress={handleLogin}
-            disabled={isAnyLoading || !email.trim() || !password.trim()}
+            isLoading={registerPending}
+            onPress={handleRegister}
+            disabled={isAnyLoading || !name.trim() || !email.trim() || !password.trim()}
           />
         </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.switchLink}>
+        <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.switchLink}>
           <Text variant="caption" style={styles.switchText}>
-            Pas encore de compte ?{' '}
-            <Text variant="caption" style={styles.switchTextAccent}>S'inscrire</Text>
+            Déjà un compte ?{' '}
+            <Text variant="caption" style={styles.switchTextAccent}>Se connecter</Text>
           </Text>
         </TouchableOpacity>
       </ScrollView>

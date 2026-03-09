@@ -19,6 +19,14 @@ const mockAuthResponse = {
 };
 
 describe('authService', () => {
+  beforeAll(() => {
+    (globalThis as Record<string, unknown>).__DEV__ = false;
+  });
+
+  afterAll(() => {
+    (globalThis as Record<string, unknown>).__DEV__ = true;
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -40,6 +48,45 @@ describe('authService', () => {
 
       expect(result.accessToken).toBe('access123');
       expect(result.user.email).toBe('test@test.com');
+    });
+  });
+
+  describe('register', () => {
+    it('calls POST to AUTH_REGISTER endpoint with payload', async () => {
+      mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
+      const payload = { email: 'new@test.com', password: 'pass', name: 'New User' };
+
+      const result = await authService.register(payload);
+
+      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_REGISTER, payload);
+      expect(result).toEqual(mockAuthResponse);
+    });
+  });
+
+  describe('oauthLogin', () => {
+    it('calls POST to Google OAuth endpoint', async () => {
+      mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
+
+      await authService.oauthLogin({ provider: 'google', mockToken: 'mock-google-token' });
+
+      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_GOOGLE, { token: 'mock-google-token' });
+    });
+
+    it('calls POST to Microsoft OAuth endpoint', async () => {
+      mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
+
+      await authService.oauthLogin({ provider: 'microsoft', mockToken: 'mock-ms-token' });
+
+      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_MICROSOFT, { token: 'mock-ms-token' });
+    });
+
+    it('returns auth response on success', async () => {
+      mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
+
+      const result = await authService.oauthLogin({ provider: 'apple', mockToken: 'mock-apple-token' });
+
+      expect(result.user.email).toBe('test@test.com');
+      expect(result.accessToken).toBe('access123');
     });
   });
 

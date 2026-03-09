@@ -7,6 +7,7 @@ export type RootStackParamList = {
 export type AuthStackParamList = {
   Splash: undefined;
   Login: undefined;
+  Register: undefined;
   CreateProfile: undefined;
   Onboarding: undefined;
 };

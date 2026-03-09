@@ -1,5 +1,25 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+// Mocks required for implemented auth screens
+jest.mock('../../../src/core/api/client', () => ({
+  __esModule: true,
+  default: { post: jest.fn(), get: jest.fn() },
+}));
+
+jest.mock('expo-image-picker', () => ({
+  requestMediaLibraryPermissionsAsync: jest.fn().mockResolvedValue({ status: 'denied' }),
+  launchImageLibraryAsync: jest.fn(),
+  MediaTypeOptions: { Images: 'Images' },
+}));
+
+const mockNavigation = {
+  navigate: jest.fn(),
+  replace: jest.fn(),
+  goBack: jest.fn(),
+  push: jest.fn(),
+};
 
 // Auth feature components
 import { OAuthButton } from '../../../src/features/auth/components/OAuthButton';
@@ -8,6 +28,7 @@ import { MobilityTypeCard } from '../../../src/features/auth/components/Mobility
 
 // Auth screens
 import { LoginScreen } from '../../../src/features/auth/screens/LoginScreen';
+import { RegisterScreen } from '../../../src/features/auth/screens/RegisterScreen';
 import { CreateProfileScreen } from '../../../src/features/auth/screens/CreateProfileScreen';
 import { OnboardingScreen } from '../../../src/features/auth/screens/OnboardingScreen';
 import { SplashScreen } from '../../../src/features/auth/screens/SplashScreen';
@@ -72,14 +93,17 @@ import { TimelineSection } from '../../../src/features/timeline/components/Timel
 import { CategoryFilter } from '../../../src/features/timeline/components/CategoryFilter';
 import { TimelineScreen } from '../../../src/features/timeline/screens/TimelineScreen';
 
+const createQueryWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { mutations: { retry: false }, queries: { retry: false } },
+  });
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+};
+
+// Stubs that need no special props (auth components excluded — they have dedicated tests)
 const stubs = [
-  ['OAuthButton', OAuthButton],
-  ['OnboardingStep', OnboardingStep],
-  ['MobilityTypeCard', MobilityTypeCard],
-  ['LoginScreen', LoginScreen],
-  ['CreateProfileScreen', CreateProfileScreen],
-  ['OnboardingScreen', OnboardingScreen],
-  ['SplashScreen', SplashScreen],
   ['AlertBanner', AlertBanner],
   ['BrandingPreview', BrandingPreview],
   ['ProgressChart', ProgressChart],
@@ -125,6 +149,71 @@ const stubs = [
 describe('Feature stub components render without crashing', () => {
   it.each(stubs)('%s renders', (_name, Component) => {
     const { UNSAFE_root } = render(<Component />);
+    expect(UNSAFE_root).toBeDefined();
+  });
+});
+
+// Auth components with required props
+describe('Auth feature components render without crashing', () => {
+  it('OAuthButton renders', () => {
+    const { UNSAFE_root } = render(<OAuthButton provider="google" onPress={jest.fn()} />);
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('OnboardingStep renders', () => {
+    const { UNSAFE_root } = render(<OnboardingStep title="Test"><></></OnboardingStep>);
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('MobilityTypeCard renders', () => {
+    const { UNSAFE_root } = render(
+      <MobilityTypeCard value="erasmus" label="Erasmus" iconName="Globe" selected={false} onSelect={jest.fn()} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+});
+
+// Auth screens need navigation props + QueryClient
+describe('Auth screens render without crashing', () => {
+  const Wrapper = createQueryWrapper();
+
+  it('SplashScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <SplashScreen navigation={mockNavigation as any} route={{} as any} />,
+      { wrapper: Wrapper },
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('LoginScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <LoginScreen navigation={mockNavigation as any} route={{} as any} />,
+      { wrapper: Wrapper },
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('RegisterScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <RegisterScreen navigation={mockNavigation as any} route={{} as any} />,
+      { wrapper: Wrapper },
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('CreateProfileScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <CreateProfileScreen navigation={mockNavigation as any} route={{} as any} />,
+      { wrapper: Wrapper },
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('OnboardingScreen renders', () => {
+    const { UNSAFE_root } = render(
+      <OnboardingScreen />,
+      { wrapper: Wrapper },
+    );
     expect(UNSAFE_root).toBeDefined();
   });
 });
