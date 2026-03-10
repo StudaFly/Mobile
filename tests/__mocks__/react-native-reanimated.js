@@ -27,6 +27,7 @@ const Reanimated = {
   runOnUI: jest.fn((fn) => fn),
   interpolate: jest.fn((value) => value),
   Extrapolation: { CLAMP: 'clamp', EXTEND: 'extend', IDENTITY: 'identity' },
+  useEvent: jest.fn(() => jest.fn()),
   useAnimatedRef: jest.fn(() => ({ current: null })),
   useAnimatedScrollHandler: jest.fn(() => ({})),
   useDerivedValue: jest.fn((fn) => ({ value: fn() })),

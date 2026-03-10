@@ -17,18 +17,29 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 const DARK_PLACEHOLDER_COLOR = 'rgba(255,255,255,0.55)';
 const OAUTH_PROVIDERS: OAuthProvider[] = ['google', 'apple', 'microsoft'];
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function validateEmail(value: string): string | undefined {
+  if (!value.trim()) return undefined;
+  return EMAIL_REGEX.test(value.trim()) ? undefined : 'Adresse email invalide (ex: ton@email.com)';
+}
+
 export function RegisterScreen({ navigation }: Props) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [emailTouched, setEmailTouched] = useState(false);
   const [password, setPassword] = useState('');
 
   const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
   const { mutate: register, isPending: registerPending, isSuccess: registerSuccess } = useRegister();
 
   const isAnyLoading = oauthPending || registerPending;
+  const emailError = emailTouched ? validateEmail(email) : undefined;
+  const isEmailValid = EMAIL_REGEX.test(email.trim());
 
   const handleRegister = () => {
-    if (!name.trim() || !email.trim() || !password.trim()) return;
+    setEmailTouched(true);
+    if (!name.trim() || !email.trim() || !password.trim() || !isEmailValid) return;
     register(
       { name: name.trim(), email: email.trim(), password },
       { onSuccess: () => navigation.navigate('CreateProfile') },
@@ -94,6 +105,8 @@ export function RegisterScreen({ navigation }: Props) {
             autoComplete="email"
             value={email}
             onChangeText={setEmail}
+            onBlur={() => setEmailTouched(true)}
+            error={emailError}
             style={styles.inputDark}
             placeholderTextColor={DARK_PLACEHOLDER_COLOR}
           />
@@ -112,7 +125,7 @@ export function RegisterScreen({ navigation }: Props) {
             fullWidth
             isLoading={registerPending}
             onPress={handleRegister}
-            disabled={isAnyLoading || !name.trim() || !email.trim() || !password.trim()}
+            disabled={isAnyLoading || !name.trim() || !isEmailValid || !password.trim()}
           />
         </View>
 

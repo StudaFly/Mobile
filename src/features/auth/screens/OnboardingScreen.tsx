@@ -140,10 +140,18 @@ export function OnboardingScreen() {
           )}
 
           {step === 2 && (
-            <DateField
-              value={data.departureDate}
-              onChange={(v) => updateData('departureDate', v)}
-            />
+            <View style={styles.dateStepWrapper}>
+              <DateField
+                value={data.departureDate}
+                onChange={(v) => updateData('departureDate', v)}
+              />
+              <View style={styles.dateHint}>
+                <Icon name="Lightbulb" size={16} color={colors.goldLight} />
+                <Text style={styles.dateHintText}>
+                  On calculera automatiquement toutes tes deadlines à partir de cette date.
+                </Text>
+              </View>
+            </View>
           )}
 
           {step === 3 && (
@@ -267,5 +275,23 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     flex: 1,
+  },
+  dateStepWrapper: {
+    gap: spacing.md,
+  },
+  dateHint: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: spacing.sm,
+    backgroundColor: 'rgba(204,156,64,0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(204,156,64,0.3)',
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
+  },
+  dateHintText: {
+    color: colors.goldLight,
+    fontSize: 13,
   },
 });

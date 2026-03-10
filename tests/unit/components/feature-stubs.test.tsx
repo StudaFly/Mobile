@@ -57,7 +57,7 @@ import { BudgetScreen } from '../../../src/features/budget/screens/BudgetScreen'
 
 // Checklist
 import { TaskCard } from '../../../src/features/checklist/components/TaskCard';
-import { TaskCategoryTabs } from '../../../src/features/checklist/components/TaskCategoryTabs';
+import { TaskCategoryTabs, ChecklistTab } from '../../../src/features/checklist/components/TaskCategoryTabs';
 import { AddTaskModal } from '../../../src/features/checklist/components/AddTaskModal';
 import { ChecklistScreen } from '../../../src/features/checklist/screens/ChecklistScreen';
 
@@ -120,10 +120,6 @@ const stubs = [
   ['LifestyleSlider', LifestyleSlider],
   ['SavingTipCard', SavingTipCard],
   ['BudgetScreen', BudgetScreen],
-  ['TaskCard', TaskCard],
-  ['TaskCategoryTabs', TaskCategoryTabs],
-  ['AddTaskModal', AddTaskModal],
-  ['ChecklistScreen', ChecklistScreen],
   ['WelcomeHeader', WelcomeHeader],
   ['GlobalProgress', GlobalProgress],
   ['NextDeadlines', NextDeadlines],
@@ -140,15 +136,92 @@ const stubs = [
   ['ProfileAvatar', ProfileAvatar],
   ['ProfileScreen', ProfileScreen],
   ['EditProfileScreen', EditProfileScreen],
-  ['TimelineItem', TimelineItem],
-  ['TimelineSection', TimelineSection],
-  ['CategoryFilter', CategoryFilter],
-  ['TimelineScreen', TimelineScreen],
 ] as const;
 
 describe('Feature stub components render without crashing', () => {
   it.each(stubs)('%s renders', (_name, Component) => {
     const { UNSAFE_root } = render(<Component />);
+    expect(UNSAFE_root).toBeDefined();
+  });
+});
+
+// Checklist components with required props
+describe('Checklist components with required props render without crashing', () => {
+  const mockTask = {
+    id: 'task-1',
+    mobilityId: 'mob-1',
+    title: 'Obtenir visa',
+    category: 'admin' as const,
+    isCompleted: false,
+    priority: 1 as const,
+  };
+
+  const mockCounts: Record<ChecklistTab, number> = {
+    all: 5, admin: 2, finance: 1, housing: 1, health: 0, practical: 1,
+  };
+
+  it('TaskCard renders', () => {
+    const { UNSAFE_root } = render(
+      <TaskCard task={mockTask} onComplete={jest.fn()} onDelete={jest.fn()} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('TaskCategoryTabs renders', () => {
+    const { UNSAFE_root } = render(
+      <TaskCategoryTabs activeTab="all" onTabChange={jest.fn()} taskCounts={mockCounts} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('AddTaskModal renders', () => {
+    const { UNSAFE_root } = render(
+      <AddTaskModal visible={false} onClose={jest.fn()} onSubmit={jest.fn()} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('ChecklistScreen renders', () => {
+    const Wrapper = createQueryWrapper();
+    const { UNSAFE_root } = render(<ChecklistScreen />, { wrapper: Wrapper });
+    expect(UNSAFE_root).toBeDefined();
+  });
+});
+
+// Timeline components with required props
+describe('Timeline components with required props render without crashing', () => {
+  const mockTask = {
+    id: 'tl-1',
+    mobilityId: 'mob-1',
+    title: 'Dossier visa',
+    category: 'admin' as const,
+    deadline: '2026-09-01',
+    isCompleted: false,
+    priority: 1 as const,
+  };
+
+  it('TimelineSection renders', () => {
+    const { UNSAFE_root } = render(<TimelineSection label="Mars 2026" />);
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('CategoryFilter renders', () => {
+    const { UNSAFE_root } = render(
+      <CategoryFilter activeFilter="all" onFilterChange={jest.fn()} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('TimelineItem renders', () => {
+    const { UNSAFE_root } = render(
+      <TimelineItem task={mockTask} isFirst={true} isLast={false} onComplete={jest.fn()} />,
+    );
+    expect(UNSAFE_root).toBeDefined();
+  });
+
+  it('TimelineScreen renders', () => {
+    const Wrapper = createQueryWrapper();
+    const { UNSAFE_root } = render(<TimelineScreen />, { wrapper: Wrapper });
     expect(UNSAFE_root).toBeDefined();
   });
 });
