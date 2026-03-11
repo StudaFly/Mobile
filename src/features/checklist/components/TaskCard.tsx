@@ -13,6 +13,7 @@ import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { Task, TaskCategory } from '../types/task.types';
 
+
 const DELETE_BUTTON_WIDTH = 88;
 const SNAP_THRESHOLD = DELETE_BUTTON_WIDTH / 2;
 
@@ -46,6 +47,9 @@ interface TaskCardProps {
 export function TaskCard({ task, onComplete, onDelete }: TaskCardProps) {
   const translateX = useSharedValue(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const hasDetails = !!(task.description || task.deadline);
 
   const categoryColor = CATEGORY_COLORS[task.category];
   const iconName = CATEGORY_ICONS[task.category];
@@ -118,55 +122,97 @@ export function TaskCard({ task, onComplete, onDelete }: TaskCardProps) {
 
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.card, task.isCompleted && styles.cardDone, cardStyle]}>
-          <Checkbox
-            checked={task.isCompleted}
-            onPress={() => {
-              if (isOpen) {
-                close();
-                return;
-              }
-              onComplete(task.id);
-            }}
-            size={26}
-          />
+          {/* Main row */}
+          <View style={styles.mainRow}>
+            <Checkbox
+              checked={task.isCompleted}
+              onPress={() => {
+                if (isOpen) {
+                  close();
+                  return;
+                }
+                onComplete(task.id);
+              }}
+              size={26}
+            />
 
-          <View style={[styles.iconWrapper, { backgroundColor: `${categoryColor}18` }]}>
-            <Icon name={iconName} size={18} color={categoryColor} />
+            <TouchableOpacity
+              style={styles.contentTouchable}
+              onPress={() => setIsExpanded((v) => !v)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.iconWrapper, { backgroundColor: `${categoryColor}18` }]}>
+                <Icon name={iconName} size={18} color={categoryColor} />
+              </View>
+
+              <View style={styles.content}>
+                <Text
+                  variant="bodyMedium"
+                  style={[styles.title, task.isCompleted && styles.titleDone]}
+                  numberOfLines={isExpanded ? undefined : 2}
+                >
+                  {task.title}
+                </Text>
+                <View style={styles.meta}>
+                  {task.deadline && !task.isCompleted && (
+                    <View style={styles.deadline}>
+                      <Icon name="Clock" size={12} color="#9CA3AF" />
+                      <Text variant="caption" style={styles.deadlineText}>
+                        {formatDeadline(task.deadline)}
+                      </Text>
+                    </View>
+                  )}
+                  {task.isCompleted && (
+                    <Text variant="caption" style={styles.completedText}>✓ Terminé</Text>
+                  )}
+                  {!task.isCompleted && priorityInfo && (
+                    <View style={[styles.priorityBadge, { backgroundColor: priorityInfo.bg }]}>
+                      <Text variant="caption" style={[styles.priorityText, { color: priorityInfo.color }]}>
+                        {priorityInfo.label}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+
+              <Icon
+                name={isExpanded ? 'ChevronUp' : 'ChevronDown'}
+                size={18}
+                color="#9CA3AF"
+              />
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.content}>
-            <Text
-              variant="bodyMedium"
-              style={[styles.title, task.isCompleted && styles.titleDone]}
-              numberOfLines={2}
-            >
-              {task.title}
-            </Text>
-            <View style={styles.meta}>
-              {task.deadline && !task.isCompleted && (
-                <View style={styles.deadline}>
-                  <Icon name="Clock" size={12} color="#9CA3AF" />
-                  <Text variant="caption" style={styles.deadlineText}>
-                    {formatDeadline(task.deadline)}
-                  </Text>
-                </View>
+          {/* Expanded details */}
+          {isExpanded && hasDetails && (
+            <View style={styles.details}>
+              {task.description && (
+                <Text variant="caption" style={styles.detailDescription}>
+                  {task.description}
+                </Text>
               )}
-              {task.isCompleted && (
-                <Text variant="caption" style={styles.completedText}>✓ Terminé</Text>
-              )}
-              {!task.isCompleted && priorityInfo && (
-                <View style={[styles.priorityBadge, { backgroundColor: priorityInfo.bg }]}>
-                  <Text variant="caption" style={[styles.priorityText, { color: priorityInfo.color }]}>
-                    {priorityInfo.label}
+              {task.deadline && (
+                <View style={styles.detailDeadlineRow}>
+                  <Icon name="Calendar" size={13} color={categoryColor} />
+                  <Text variant="caption" style={[styles.detailDeadlineText, { color: categoryColor }]}>
+                    Échéance : {formatFullDate(task.deadline)}
                   </Text>
                 </View>
               )}
             </View>
-          </View>
+          )}
         </Animated.View>
       </GestureDetector>
     </View>
   );
+}
+
+function formatFullDate(dateString: string): string {
+  const date = new Date(dateString);
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
 }
 
 function formatDeadline(dateString: string): string {
@@ -206,9 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.sm,
+    flexDirection: 'column',
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.md,
     borderRadius: radii.md,
@@ -216,6 +260,39 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
     backgroundColor: colors.white,
     ...shadows.sm,
+  },
+  mainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  chevronBtn: {
+    padding: 2,
+  },
+  contentTouchable: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  details: {
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+    gap: spacing.xs,
+  },
+  detailDescription: {
+    color: '#6B7280',
+    lineHeight: 18,
+  },
+  detailDeadlineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  detailDeadlineText: {
+    fontSize: 12,
   },
   cardDone: {
     opacity: 0.55,

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { TextInput } from '@/design-system/components/forms/TextInput';
@@ -16,6 +17,17 @@ import { Button } from '@/design-system/components/actions/Button';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { TaskCategory, TaskPriority } from '../types/task.types';
 import { CreateTaskPayload } from '../services/checklist.service';
+
+function formatDate(date: Date): string {
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
+  return `${d}/${m}/${y}`;
+}
+
+function toISODate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
 
 const CATEGORIES: { id: TaskCategory; label: string; icon: string; color: string }[] = [
   { id: 'admin', label: 'Admin', icon: 'FileText', color: colors.blue },
@@ -43,12 +55,25 @@ export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: 
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<TaskCategory>('admin');
   const [priority, setPriority] = useState<TaskPriority>(2);
+  const [deadlineDate, setDeadlineDate] = useState<Date | null>(null);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const canSubmit = title.trim().length > 0 && !isLoading;
 
+  const handleDateChange = (_event: DateTimePickerEvent, selected?: Date) => {
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selected) setDeadlineDate(selected);
+  };
+
   const handleSubmit = () => {
     if (!canSubmit) return;
-    onSubmit({ title: title.trim(), description: description.trim() || undefined, category, priority });
+    onSubmit({
+      title: title.trim(),
+      description: description.trim() || undefined,
+      category,
+      priority,
+      deadline: deadlineDate ? toISODate(deadlineDate) : undefined,
+    });
     resetForm();
   };
 
@@ -62,6 +87,8 @@ export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: 
     setDescription('');
     setCategory('admin');
     setPriority(2);
+    setDeadlineDate(null);
+    setShowDatePicker(false);
   };
 
   return (
@@ -172,6 +199,49 @@ export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: 
                   );
                 })}
               </View>
+            </View>
+
+            {/* Deadline */}
+            <View style={styles.field}>
+              <Text variant="label" style={styles.fieldLabel}>DATE LIMITE (optionnel)</Text>
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                activeOpacity={0.7}
+                style={styles.dateField}
+              >
+                <Icon name="Calendar" size={16} color={deadlineDate ? colors.darkBlue : '#9CA3AF'} />
+                <Text
+                  variant="body"
+                  style={[styles.dateFieldText, !deadlineDate && styles.dateFieldPlaceholder]}
+                >
+                  {deadlineDate ? formatDate(deadlineDate) : 'jj/mm/aaaa'}
+                </Text>
+                {deadlineDate && (
+                  <TouchableOpacity
+                    onPress={() => setDeadlineDate(null)}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Icon name="X" size={16} color="#9CA3AF" />
+                  </TouchableOpacity>
+                )}
+              </TouchableOpacity>
+              {showDatePicker && (
+                <DateTimePicker
+                  value={deadlineDate ?? new Date()}
+                  mode="date"
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  minimumDate={new Date()}
+                  onChange={handleDateChange}
+                />
+              )}
+              {showDatePicker && Platform.OS === 'ios' && (
+                <TouchableOpacity
+                  style={styles.dateConfirmBtn}
+                  onPress={() => setShowDatePicker(false)}
+                >
+                  <Text style={styles.dateConfirmText}>Valider</Text>
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Submit */}
@@ -285,5 +355,38 @@ const styles = StyleSheet.create({
   },
   submitWrapper: {
     marginTop: spacing.xs,
+  },
+  dateField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: radii.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 4,
+    backgroundColor: '#F9FAFB',
+    minHeight: 52,
+  },
+  dateFieldText: {
+    flex: 1,
+    color: colors.darkBlue,
+    fontSize: 16,
+    fontFamily: 'DMSans_400Regular',
+  },
+  dateFieldPlaceholder: {
+    color: '#9CA3AF',
+  },
+  dateConfirmBtn: {
+    alignSelf: 'flex-end',
+    marginTop: spacing.xs,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+    backgroundColor: colors.gold,
+    borderRadius: radii.md,
+  },
+  dateConfirmText: {
+    color: colors.white,
+    fontWeight: '600',
   },
 });
