@@ -69,7 +69,7 @@ describe('useTaskMutation — branch coverage', () => {
       // completeTask swallows backend errors, so no need for service to succeed
       mockedChecklistService.completeTask.mockRejectedValue(new Error('No backend'));
 
-      act(() => {
+      await act(async () => {
         result.current.completeTask.mutate('task-1');
       });
 
@@ -87,7 +87,7 @@ describe('useTaskMutation — branch coverage', () => {
 
       mockedChecklistService.completeTask.mockRejectedValue(new Error('No backend'));
 
-      act(() => {
+      await act(async () => {
         result.current.completeTask.mutate('task-2'); // task-2 starts as isCompleted: true
       });
 
@@ -104,7 +104,7 @@ describe('useTaskMutation — branch coverage', () => {
 
       mockedChecklistService.completeTask.mockRejectedValue(new Error('No backend'));
 
-      act(() => {
+      await act(async () => {
         result.current.completeTask.mutate('task-1');
       });
 
@@ -124,7 +124,7 @@ describe('useTaskMutation — branch coverage', () => {
 
       mockedChecklistService.deleteTask.mockRejectedValue(new Error('No backend'));
 
-      act(() => {
+      await act(async () => {
         result.current.deleteTask.mutate('task-1');
       });
 
@@ -142,7 +142,7 @@ describe('useTaskMutation — branch coverage', () => {
 
       mockedChecklistService.deleteTask.mockRejectedValue(new Error('No backend'));
 
-      act(() => {
+      await act(async () => {
         result.current.deleteTask.mutate('task-2');
       });
 
@@ -169,7 +169,7 @@ describe('useTaskMutation — branch coverage', () => {
       };
       mockedChecklistService.createTask.mockResolvedValue(createdTask);
 
-      act(() => {
+      await act(async () => {
         result.current.createTask.mutate({
           title: 'New Task',
           category: 'housing',
@@ -203,7 +203,7 @@ describe('useTaskMutation — branch coverage', () => {
       };
       mockedChecklistService.createTask.mockResolvedValue(createdTask);
 
-      act(() => {
+      await act(async () => {
         result.current.createTask.mutate({
           title: 'Visa Application',
           description: 'Submit at consulate',
@@ -239,7 +239,7 @@ describe('useTaskMutation — branch coverage', () => {
       // createTask will reject, triggering onError
       mockedChecklistService.createTask.mockRejectedValue(new Error('Server error'));
 
-      act(() => {
+      await act(async () => {
         result.current.createTask.mutate({
           title: 'Failed Task',
           category: 'health',
