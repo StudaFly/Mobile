@@ -193,7 +193,7 @@ describe('Tooltip', () => {
 
 describe('Feedback stubs', () => {
   it('EmptyState renders', () => {
-    const { UNSAFE_root } = render(<EmptyState />);
+    const { UNSAFE_root } = render(<EmptyState title="Aucun élément" />);
     expect(UNSAFE_root).toBeDefined();
   });
 
@@ -225,7 +225,7 @@ describe('Feedback stubs', () => {
 
 describe('Form stubs', () => {
   it('Checkbox renders', () => {
-    const { UNSAFE_root } = render(<Checkbox />);
+    const { UNSAFE_root } = render(<Checkbox checked={false} onPress={jest.fn()} />);
     expect(UNSAFE_root).toBeDefined();
   });
 
