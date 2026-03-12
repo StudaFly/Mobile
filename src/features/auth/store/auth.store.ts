@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { AuthState, AuthUser } from '../types/auth.types';
+import { secureStorage } from '@/core/storage/secureStorage';
 
 interface AuthStore extends AuthState {
   pendingUser: AuthUser | null;
@@ -38,6 +39,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         : {},
     ),
 
-  clearAuth: () =>
-    set({ user: null, token: null, role: null, isAuthenticated: false, pendingUser: null, pendingToken: null }),
+  clearAuth: () => {
+    void secureStorage.clearTokens();
+    set({ user: null, token: null, role: null, isAuthenticated: false, pendingUser: null, pendingToken: null });
+  },
 }));

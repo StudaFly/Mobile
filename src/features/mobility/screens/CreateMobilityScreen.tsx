@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
 import { Text } from '@/design-system/primitives/Text';
 import { Icon } from '@/design-system/primitives/Icon';
 import { Button } from '@/design-system/components/actions/Button';
 import { TextInput } from '@/design-system/components/forms/TextInput';
 import { colors, radii, spacing } from '@/design-system/tokens';
-import { MobilityTypeCard } from '../components/MobilityTypeCard';
-import { OnboardingStep } from '../components/OnboardingStep';
-import { useOnboarding, TOTAL_ONBOARDING_STEPS } from '../hooks/useOnboarding';
-import { MobilityTypeOption } from '../types/auth.types';
-
+import { MobilityTypeCard } from '@/features/auth/components/MobilityTypeCard';
+import { OnboardingStep } from '@/features/auth/components/OnboardingStep';
+import { MobilityTypeOption } from '@/features/auth/types/auth.types';
+import { B2CStackParamList } from '@/navigation/types';
+import { useCreateMobility, TOTAL_CREATE_STEPS } from '../hooks/useCreateMobility';
 
 interface MobilityOption {
   value: MobilityTypeOption;
@@ -85,26 +87,37 @@ function DateField({ value, onChange }: DateFieldProps) {
   );
 }
 
-export function OnboardingScreen() {
-  const { step, data, next, prev, updateData, isLastStep, canProceed, completeOnboarding, isCompleting, completionError, totalSteps } =
-    useOnboarding();
+export function CreateMobilityScreen() {
+  const navigation = useNavigation<NativeStackNavigationProp<B2CStackParamList>>();
+
+  const { step, data, next, prev, updateData, isLastStep, canProceed, createMobility, isCreating, creationError, totalSteps } =
+    useCreateMobility(() => navigation.goBack());
 
   const config = STEP_CONFIG[step];
 
   const handleNext = () => {
     if (isLastStep) {
-      completeOnboarding();
+      createMobility();
     } else {
       next();
     }
   };
 
-  const errorMessage = completionError instanceof Error
-    ? completionError.message
-    : completionError ? 'Une erreur est survenue. Réessaie.' : null;
+  const errorMessage = creationError instanceof Error
+    ? creationError.message
+    : creationError ? 'Une erreur est survenue. Réessaie.' : null;
 
   return (
     <ScreenWrapper style={styles.wrapper}>
+      {/* Top bar */}
+      <View style={styles.topBar}>
+        <Pressable onPress={() => navigation.goBack()} style={styles.closeButton}>
+          <Icon name="X" size={22} color="rgba(255,255,255,0.8)" />
+        </Pressable>
+        <Text variant="label" style={styles.topBarTitle}>Nouvelle mobilité</Text>
+        <View style={styles.closeButton} />
+      </View>
+
       {/* Progress dots */}
       <View style={styles.progressBar}>
         {Array.from({ length: totalSteps }).map((_, i) => (
@@ -171,27 +184,22 @@ export function OnboardingScreen() {
         </OnboardingStep>
 
         <Text variant="caption" style={styles.stepCounter}>
-          Étape {step + 1} sur {TOTAL_ONBOARDING_STEPS}
+          Étape {step + 1} sur {TOTAL_CREATE_STEPS}
         </Text>
       </ScrollView>
 
-      {/* Footer — flex: 1 sur le bouton Suivant évite le débordement */}
       <View style={styles.footer}>
         {step > 0 && (
-          <Button
-            label="Retour"
-            variant="ghost"
-            onPress={prev}
-          />
+          <Button label="Retour" variant="ghost" onPress={prev} />
         )}
         {errorMessage && (
           <Text style={styles.errorText}>{errorMessage}</Text>
         )}
         <Button
-          label={isCompleting ? 'Création...' : isLastStep ? "C'est parti !" : 'Suivant'}
+          label={isCreating ? 'Création...' : isLastStep ? "C'est parti !" : 'Suivant'}
           iconRight="ArrowRight"
           onPress={handleNext}
-          disabled={!canProceed() || isCompleting}
+          disabled={!canProceed() || isCreating}
           style={styles.nextButton}
         />
       </View>
@@ -202,6 +210,22 @@ export function OnboardingScreen() {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: colors.darkBlue,
+  },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+  },
+  closeButton: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  topBarTitle: {
+    color: colors.white,
   },
   progressBar: {
     flexDirection: 'row',

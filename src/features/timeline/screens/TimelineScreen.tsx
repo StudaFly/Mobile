@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
 import { ProgressBar } from '@/design-system/components/data-display/ProgressBar';
+import { EmptyState } from '@/design-system/components/feedback/EmptyState';
 import { Skeleton } from '@/design-system/components/feedback/Skeleton';
 import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, spacing } from '@/design-system/tokens';
+import { B2CStackParamList } from '@/navigation/types';
 import { useTimeline } from '../hooks/useTimeline';
 import { CategoryFilter } from '../components/CategoryFilter';
 import { TimelineItem } from '../components/TimelineItem';
@@ -14,6 +18,7 @@ import type { TimelineFilter } from '../types/timeline.types';
 
 export function TimelineScreen() {
   const [activeFilter, setActiveFilter] = useState<TimelineFilter>('all');
+  const navigation = useNavigation<NativeStackNavigationProp<B2CStackParamList>>();
 
   const {
     groups,
@@ -23,11 +28,32 @@ export function TimelineScreen() {
     urgentTasks,
     daysUntilDeparture,
     isLoading,
+    mobilityId,
+    refetch,
+    isRefetching,
   } = useTimeline(activeFilter);
 
   const handleComplete = () => {
     // TODO: wire to mutation when backend is ready
   };
+
+  if (!mobilityId) {
+    return (
+      <ScreenWrapper style={styles.screen}>
+        <View style={styles.header}>
+          <View style={styles.headerTop}>
+            <Text variant="heading2" style={styles.headerTitle}>Ta Timeline</Text>
+          </View>
+        </View>
+        <EmptyState
+          title="Aucune mobilité configurée"
+          message="Configure ta première mobilité pour voir ta timeline de préparation."
+          ctaLabel="Créer ma mobilité"
+          onCta={() => navigation.navigate('CreateMobility')}
+        />
+      </ScreenWrapper>
+    );
+  }
 
   if (isLoading && totalCount === 0) {
     return (
@@ -97,6 +123,9 @@ export function TimelineScreen() {
       <ScrollView
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
       >
         {groups.length === 0 ? (
           <View style={styles.emptyWrapper}>

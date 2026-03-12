@@ -10,6 +10,11 @@ jest.mock('../../../src/core/api/client', () => ({
 jest.mock('../../../src/features/checklist/hooks/useChecklist');
 jest.mock('../../../src/features/checklist/hooks/useTaskMutation');
 
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: () => ({ navigate: jest.fn(), goBack: jest.fn() }),
+}));
+
 import { useChecklist } from '../../../src/features/checklist/hooks/useChecklist';
 import { useTaskMutation } from '../../../src/features/checklist/hooks/useTaskMutation';
 import { ChecklistScreen } from '../../../src/features/checklist/screens/ChecklistScreen';
@@ -75,6 +80,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: true,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -92,6 +99,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -109,6 +118,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -127,6 +138,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -149,6 +162,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -167,6 +182,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();
@@ -196,6 +213,8 @@ describe('ChecklistScreen — interaction branches', () => {
       taskCountByCategory: mockTaskCounts,
       isLoading: false,
       mobilityId: 'mob-1',
+      refetch: jest.fn(),
+      isRefetching: false,
     });
 
     const Wrapper = createQueryWrapper();

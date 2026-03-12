@@ -26,6 +26,7 @@ export type B2CStackParamList = {
   Guide: undefined;
   JourJ: undefined;
   EditProfile: undefined;
+  CreateMobility: undefined;
 };
 
 export type B2BTabParamList = {

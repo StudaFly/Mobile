@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
 import { ProgressBar } from '@/design-system/components/data-display/ProgressBar';
 import { EmptyState } from '@/design-system/components/feedback/EmptyState';
@@ -7,6 +9,7 @@ import { Skeleton } from '@/design-system/components/feedback/Skeleton';
 import { FAB } from '@/design-system/components/actions/FAB';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, spacing } from '@/design-system/tokens';
+import { B2CStackParamList } from '@/navigation/types';
 import { useChecklist } from '../hooks/useChecklist';
 import { useTaskMutation } from '../hooks/useTaskMutation';
 import { TaskCard } from '../components/TaskCard';
@@ -17,6 +20,7 @@ import { CreateTaskPayload } from '../services/checklist.service';
 export function ChecklistScreen() {
   const [activeTab, setActiveTab] = useState<ChecklistTab>('all');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigation = useNavigation<NativeStackNavigationProp<B2CStackParamList>>();
 
   const {
     tasks,
@@ -26,6 +30,8 @@ export function ChecklistScreen() {
     taskCountByCategory,
     isLoading,
     mobilityId,
+    refetch,
+    isRefetching,
   } = useChecklist(activeTab);
 
   const { completeTask, createTask, deleteTask } = useTaskMutation(mobilityId);
@@ -41,6 +47,22 @@ export function ChecklistScreen() {
   const handleAddTask = (payload: CreateTaskPayload) => {
     createTask.mutate(payload, { onSuccess: () => setIsModalVisible(false) });
   };
+
+  if (!mobilityId) {
+    return (
+      <ScreenWrapper style={styles.screen}>
+        <View style={styles.header}>
+          <Text variant="heading2" style={styles.headerTitle}>Checklist</Text>
+        </View>
+        <EmptyState
+          title="Aucune mobilité configurée"
+          message="Configure ta première mobilité pour commencer à gérer tes tâches."
+          ctaLabel="Créer ma mobilité"
+          onCta={() => navigation.navigate('CreateMobility')}
+        />
+      </ScreenWrapper>
+    );
+  }
 
   if (isLoading && totalCount === 0) {
     return (
@@ -87,6 +109,9 @@ export function ChecklistScreen() {
           <ScrollView
             contentContainerStyle={styles.list}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+            }
           >
             {tasks.map((task) => (
               <TaskCard
