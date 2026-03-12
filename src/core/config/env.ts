@@ -5,5 +5,8 @@ interface Env {
 }
 
 export const env: Env = {
-  BASE_URL: (Constants.expoConfig?.extra?.BASE_URL as string) ?? 'http://localhost:8000/api/v1',
+  BASE_URL:
+    (Constants.expoConfig?.extra?.BASE_URL as string | undefined) ??
+    process.env.EXPO_PUBLIC_API_URL ??
+    'http://localhost:8080/api/v1',
 };

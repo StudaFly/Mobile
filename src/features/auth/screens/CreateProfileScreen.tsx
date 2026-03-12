@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, Switch, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
@@ -8,6 +8,7 @@ import { Button } from '@/design-system/components/actions/Button';
 import { TextInput } from '@/design-system/components/forms/TextInput';
 import { colors, radii, spacing } from '@/design-system/tokens';
 import { AuthStackParamList } from '@/navigation/types';
+import { userService } from '@/features/profile/services/user.service';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'CreateProfile'>;
 
@@ -21,6 +22,7 @@ export function CreateProfileScreen({ navigation }: Props) {
   const [enableNotifications, setEnableNotifications] = useState(true);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const canContinue = firstName.trim().length > 0 && lastName.trim().length > 0;
 
@@ -44,8 +46,24 @@ export function CreateProfileScreen({ navigation }: Props) {
     setPhotoUri(null);
   };
 
-  const handleContinue = () => {
-    navigation.navigate('Onboarding');
+  const handleContinue = async () => {
+    setIsLoading(true);
+    try {
+      await userService.patchMe({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        phone: phone.trim() || undefined,
+        institution: institution.trim() || undefined,
+        enableNotifications,
+        avatarEmoji: selectedEmoji ?? undefined,
+        profilePictureUri: photoUri ?? undefined,
+      });
+      navigation.navigate('Onboarding');
+    } catch {
+      Alert.alert('Erreur', 'Impossible de sauvegarder ton profil. Réessaie.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -142,10 +160,10 @@ export function CreateProfileScreen({ navigation }: Props) {
         </View>
 
         <Button
-          label="Continuer"
+          label={isLoading ? 'Enregistrement...' : 'Continuer'}
           fullWidth
           onPress={handleContinue}
-          disabled={!canContinue}
+          disabled={!canContinue || isLoading}
         />
       </ScrollView>
     </ScreenWrapper>

@@ -8,9 +8,7 @@ export function useTaskMutation(mobilityId: string) {
   const queryKey = [CHECKLIST_QUERY_KEY, mobilityId];
 
   const completeTask = useMutation({
-    mutationFn: async (taskId: string) => {
-      try { return await checklistService.completeTask(taskId); } catch { /* no backend yet */ }
-    },
+    mutationFn: (taskId: string) => checklistService.completeTask(taskId),
     onMutate: async (taskId: string) => {
       await queryClient.cancelQueries({ queryKey });
       queryClient.setQueryData<Task[]>(queryKey, (old = []) =>
@@ -18,6 +16,9 @@ export function useTaskMutation(mobilityId: string) {
           t.id === taskId ? { ...t, isCompleted: !t.isCompleted } : t,
         ),
       );
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 
@@ -48,17 +49,21 @@ export function useTaskMutation(mobilityId: string) {
         queryClient.setQueryData(queryKey, ctx.previous);
       }
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+    },
   });
 
   const deleteTask = useMutation({
-    mutationFn: async (taskId: string) => {
-      try { await checklistService.deleteTask(taskId); } catch { /* no backend yet */ }
-    },
+    mutationFn: (taskId: string) => checklistService.deleteTask(taskId),
     onMutate: async (taskId: string) => {
       await queryClient.cancelQueries({ queryKey });
       queryClient.setQueryData<Task[]>(queryKey, (old = []) =>
         old.filter((t) => t.id !== taskId),
       );
+    },
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey });
     },
   });
 

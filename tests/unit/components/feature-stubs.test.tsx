@@ -21,6 +21,11 @@ const mockNavigation = {
   push: jest.fn(),
 };
 
+jest.mock('@react-navigation/native', () => ({
+  ...jest.requireActual('@react-navigation/native'),
+  useNavigation: () => mockNavigation,
+}));
+
 // Auth feature components
 import { OAuthButton } from '../../../src/features/auth/components/OAuthButton';
 import { OnboardingStep } from '../../../src/features/auth/components/OnboardingStep';

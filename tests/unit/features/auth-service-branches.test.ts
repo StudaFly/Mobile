@@ -1,6 +1,6 @@
-// Cover the __DEV__ = true (mock) branches of auth.service.ts
-// The existing auth-service.test.ts covers the __DEV__ = false (real API) paths.
-// This file ensures the mock/dev paths are explicitly tested too.
+// Cover the error/rejection branches of auth.service.ts
+// The auth-service.test.ts covers all success paths.
+// This file ensures API rejections are properly propagated.
 
 jest.mock('../../../src/core/api/client', () => ({
   __esModule: true,
@@ -12,79 +12,84 @@ import apiClientModule from '../../../src/core/api/client';
 
 const apiClient = apiClientModule as unknown as { post: jest.Mock };
 
-describe('authService — __DEV__ = true (mock) branches', () => {
-  beforeAll(() => {
-    (globalThis as Record<string, unknown>).__DEV__ = true;
+describe('authService — error branches', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(() => {
-    (globalThis as Record<string, unknown>).__DEV__ = false;
-  });
+  describe('login', () => {
+    it('propagates rejection when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('Network error'));
 
-  describe('login (mock path)', () => {
-    it('returns mock response without calling apiClient', async () => {
-      const result = await authService.login({ email: 'test@example.com', password: 'secret' });
-
-      expect(apiClient.post).not.toHaveBeenCalled();
-      expect(result.user.email).toBe('test@example.com');
-      expect(result.accessToken).toBe('mock-access-token');
-      expect(result.refreshToken).toBe('mock-refresh-token');
+      await expect(
+        authService.login({ email: 'a@b.com', password: 'pw' }),
+      ).rejects.toThrow('Network error');
     });
 
-    it('uses provided email in mock user', async () => {
-      const result = await authService.login({ email: 'custom@studafly.com', password: 'pw' });
+    it('propagates rejection with 401 status', async () => {
+      const error = Object.assign(new Error('Unauthorized'), {
+        response: { status: 401, data: { error: { message: 'Invalid credentials' } } },
+      });
+      apiClient.post.mockRejectedValue(error);
 
-      expect(result.user.email).toBe('custom@studafly.com');
-      expect(result.user.role).toBe('student');
-      expect(result.user.isPremium).toBe(false);
-    });
-  });
-
-  describe('register (mock path)', () => {
-    it('returns mock response without calling apiClient', async () => {
-      const result = await authService.register({ email: 'new@example.com', password: 'pass', name: 'Alice' });
-
-      expect(apiClient.post).not.toHaveBeenCalled();
-      expect(result.user.email).toBe('new@example.com');
-      expect(result.user.name).toBe('Alice');
-    });
-
-    it('returns valid tokens in mock response', async () => {
-      const result = await authService.register({ email: 'a@b.com', password: 'pw', name: 'Bob' });
-
-      expect(result.accessToken).toBe('mock-access-token');
-      expect(result.refreshToken).toBe('mock-refresh-token');
+      await expect(
+        authService.login({ email: 'bad@b.com', password: 'wrong' }),
+      ).rejects.toThrow('Unauthorized');
     });
   });
 
-  describe('oauthLogin (mock path)', () => {
-    it('returns mock google response without calling apiClient', async () => {
-      const result = await authService.oauthLogin({ provider: 'google', mockToken: 'g-token' });
+  describe('register', () => {
+    it('propagates rejection when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('Server error'));
 
-      expect(apiClient.post).not.toHaveBeenCalled();
-      expect(result.user.email).toBe('google@studafly.com');
-      expect(result.accessToken).toBe('mock-access-token');
+      await expect(
+        authService.register({ email: 'new@b.com', password: 'pw', name: 'Alice' }),
+      ).rejects.toThrow('Server error');
     });
 
-    it('returns mock microsoft response', async () => {
-      const result = await authService.oauthLogin({ provider: 'microsoft', mockToken: 'ms-token' });
+    it('propagates rejection with 409 (email already taken)', async () => {
+      const error = Object.assign(new Error('Conflict'), {
+        response: { status: 409, data: { error: { message: 'Email already taken' } } },
+      });
+      apiClient.post.mockRejectedValue(error);
 
-      expect(result.user.email).toBe('microsoft@studafly.com');
-      expect(result.accessToken).toBe('mock-access-token');
-    });
-
-    it('returns mock apple response', async () => {
-      const result = await authService.oauthLogin({ provider: 'apple', mockToken: 'apple-token' });
-
-      expect(result.user.email).toBe('apple@studafly.com');
+      await expect(
+        authService.register({ email: 'taken@b.com', password: 'pw', name: 'Bob' }),
+      ).rejects.toThrow('Conflict');
     });
   });
 
-  describe('logout (mock path)', () => {
-    it('returns without calling apiClient', async () => {
-      await authService.logout();
+  describe('oauthLogin', () => {
+    it('propagates rejection for google when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('OAuth error'));
 
-      expect(apiClient.post).not.toHaveBeenCalled();
+      await expect(
+        authService.oauthLogin({ provider: 'google', mockToken: 'bad-token' }),
+      ).rejects.toThrow('OAuth error');
+    });
+
+    it('propagates rejection for microsoft when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('OAuth error'));
+
+      await expect(
+        authService.oauthLogin({ provider: 'microsoft', mockToken: 'bad-token' }),
+      ).rejects.toThrow('OAuth error');
+    });
+
+    it('propagates rejection for apple when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('OAuth error'));
+
+      await expect(
+        authService.oauthLogin({ provider: 'apple', mockToken: 'bad-token' }),
+      ).rejects.toThrow('OAuth error');
+    });
+  });
+
+  describe('logout', () => {
+    it('propagates rejection when API fails', async () => {
+      apiClient.post.mockRejectedValue(new Error('Logout failed'));
+
+      await expect(authService.logout()).rejects.toThrow('Logout failed');
     });
   });
 });
