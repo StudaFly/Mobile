@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "expo start",
+    "dev": "expo start",
     "start:tunnel": "node scripts/dev-tunnel.mjs",
     "android": "expo start --android",
     "ios": "expo start --ios",
