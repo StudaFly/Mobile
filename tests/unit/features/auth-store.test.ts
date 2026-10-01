@@ -6,6 +6,12 @@ const mockUser = {
   name: 'Lucas',
   role: 'student' as const,
   isPremium: false,
+  institutionId: null,
+  emailVerified: false,
+  oauthProvider: null,
+  avatarEmoji: null,
+  phone: null,
+  enableNotifications: true,
   createdAt: '2024-01-01',
 };
 

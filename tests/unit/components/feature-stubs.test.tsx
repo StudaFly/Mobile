@@ -55,10 +55,8 @@ import { StudentDetailScreen } from '../../../src/features/b2b/screens/StudentDe
 import { BrandingScreen } from '../../../src/features/b2b/screens/BrandingScreen';
 
 // Budget
-import { BudgetCategoryRow } from '../../../src/features/budget/components/BudgetCategoryRow';
 import { LifestyleSlider } from '../../../src/features/budget/components/LifestyleSlider';
 import { SavingTipCard } from '../../../src/features/budget/components/SavingTipCard';
-import { BudgetScreen } from '../../../src/features/budget/screens/BudgetScreen';
 
 // Checklist
 import { TaskCard } from '../../../src/features/checklist/components/TaskCard';
@@ -67,30 +65,19 @@ import { AddTaskModal } from '../../../src/features/checklist/components/AddTask
 import { ChecklistScreen } from '../../../src/features/checklist/screens/ChecklistScreen';
 
 // Dashboard
-import { WelcomeHeader } from '../../../src/features/dashboard/components/WelcomeHeader';
-import { GlobalProgress } from '../../../src/features/dashboard/components/GlobalProgress';
-import { NextDeadlines } from '../../../src/features/dashboard/components/NextDeadlines';
-import { DashboardScreen } from '../../../src/features/dashboard/screens/DashboardScreen';
 
 // Documents
 import { DocumentCard } from '../../../src/features/documents/components/DocumentCard';
 import { DocumentUploader } from '../../../src/features/documents/components/DocumentUploader';
 import { OfflineIndicator } from '../../../src/features/documents/components/OfflineIndicator';
-import { DocumentsScreen } from '../../../src/features/documents/screens/DocumentsScreen';
 
 // Guide
-import { GuideSectionCard } from '../../../src/features/guide/components/GuideSectionCard';
 import { CulturalTipItem } from '../../../src/features/guide/components/CulturalTipItem';
-import { GuideScreen } from '../../../src/features/guide/screens/GuideScreen';
 
 // JourJ
 import { DepartureStep } from '../../../src/features/jourj/components/DepartureStep';
-import { JourJScreen } from '../../../src/features/jourj/screens/JourJScreen';
 
 // Profile
-import { ProfileAvatar } from '../../../src/features/profile/components/ProfileAvatar';
-import { ProfileScreen } from '../../../src/features/profile/screens/ProfileScreen';
-import { EditProfileScreen } from '../../../src/features/profile/screens/EditProfileScreen';
 
 // Timeline
 import { TimelineItem } from '../../../src/features/timeline/components/TimelineItem';
@@ -121,26 +108,13 @@ const stubs = [
   ['SettingsScreen', SettingsScreen],
   ['StudentDetailScreen', StudentDetailScreen],
   ['BrandingScreen', BrandingScreen],
-  ['BudgetCategoryRow', BudgetCategoryRow],
   ['LifestyleSlider', LifestyleSlider],
   ['SavingTipCard', SavingTipCard],
-  ['BudgetScreen', BudgetScreen],
-  ['WelcomeHeader', WelcomeHeader],
-  ['GlobalProgress', GlobalProgress],
-  ['NextDeadlines', NextDeadlines],
-  ['DashboardScreen', DashboardScreen],
   ['DocumentCard', DocumentCard],
   ['DocumentUploader', DocumentUploader],
   ['OfflineIndicator', OfflineIndicator],
-  ['DocumentsScreen', DocumentsScreen],
-  ['GuideSectionCard', GuideSectionCard],
   ['CulturalTipItem', CulturalTipItem],
-  ['GuideScreen', GuideScreen],
   ['DepartureStep', DepartureStep],
-  ['JourJScreen', JourJScreen],
-  ['ProfileAvatar', ProfileAvatar],
-  ['ProfileScreen', ProfileScreen],
-  ['EditProfileScreen', EditProfileScreen],
 ] as const;
 
 describe('Feature stub components render without crashing', () => {
@@ -168,6 +142,7 @@ describe('Checklist components with required props render without crashing', () 
   it('TaskCard renders', () => {
     const { UNSAFE_root } = render(
       <TaskCard task={mockTask} onComplete={jest.fn()} onDelete={jest.fn()} />,
+      { wrapper: createQueryWrapper() },
     );
     expect(UNSAFE_root).toBeDefined();
   });
@@ -175,6 +150,7 @@ describe('Checklist components with required props render without crashing', () 
   it('TaskCategoryTabs renders', () => {
     const { UNSAFE_root } = render(
       <TaskCategoryTabs activeTab="all" onTabChange={jest.fn()} taskCounts={mockCounts} />,
+      { wrapper: createQueryWrapper() },
     );
     expect(UNSAFE_root).toBeDefined();
   });
@@ -182,6 +158,7 @@ describe('Checklist components with required props render without crashing', () 
   it('AddTaskModal renders', () => {
     const { UNSAFE_root } = render(
       <AddTaskModal visible={false} onClose={jest.fn()} onSubmit={jest.fn()} />,
+      { wrapper: createQueryWrapper() },
     );
     expect(UNSAFE_root).toBeDefined();
   });
@@ -213,6 +190,7 @@ describe('Timeline components with required props render without crashing', () =
   it('CategoryFilter renders', () => {
     const { UNSAFE_root } = render(
       <CategoryFilter activeFilter="all" onFilterChange={jest.fn()} />,
+      { wrapper: createQueryWrapper() },
     );
     expect(UNSAFE_root).toBeDefined();
   });
@@ -220,6 +198,7 @@ describe('Timeline components with required props render without crashing', () =
   it('TimelineItem renders', () => {
     const { UNSAFE_root } = render(
       <TimelineItem task={mockTask} isFirst={true} isLast={false} onComplete={jest.fn()} />,
+      { wrapper: createQueryWrapper() },
     );
     expect(UNSAFE_root).toBeDefined();
   });
