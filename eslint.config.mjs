@@ -23,6 +23,10 @@ export default [
         __dirname: "readonly",
         __DEV__: "readonly",
         global: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
         describe: "readonly",
         it: "readonly",
         expect: "readonly",
@@ -61,6 +65,18 @@ export default [
     files: ["tests/**/*.{ts,tsx}"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      sourceType: "module",
+      globals: {
+        process: "readonly",
+        console: "readonly",
+        fetch: "readonly",
+        setTimeout: "readonly",
+      },
     },
   },
   {
