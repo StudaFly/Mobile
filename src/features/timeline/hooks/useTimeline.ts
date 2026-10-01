@@ -44,10 +44,7 @@ export function useTimeline(filter: TimelineFilter = 'all') {
   const mobilityId = useMobilityStore((s) => s.activeMobilityId);
   const { data: mobility } = useMobility();
 
-  const departureDate = mobility?.departureDate ? new Date(mobility.departureDate) : null;
-  const daysUntilDeparture = departureDate
-    ? Math.ceil((departureDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-    : null;
+  const daysUntilDeparture = mobility?.daysUntilDeparture ?? null;
 
   const query = useQuery({
     queryKey: [TIMELINE_QUERY_KEY, mobilityId],

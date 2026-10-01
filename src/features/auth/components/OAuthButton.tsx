@@ -6,7 +6,6 @@ import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { OAuthProvider } from '../types/auth.types';
 import { OAuthLogo } from './OAuthLogo';
 
-// Couleurs brand OAuth — hors palette StudaFly, constantes ici par exception
 const GOOGLE_BORDER = 'rgba(33,52,88,0.12)';
 const APPLE_BG = '#000000';
 const MICROSOFT_BG = '#0078D4';

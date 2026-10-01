@@ -8,7 +8,8 @@ export interface TimelineTask {
   title: string;
   description?: string;
   category: TaskCategory;
-  deadline?: string;
+  deadline?: string | null;
+  daysUntilDeadline?: number | null;
   isCompleted: boolean;
   priority: 1 | 2 | 3;
 }

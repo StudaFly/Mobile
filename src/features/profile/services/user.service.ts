@@ -4,12 +4,12 @@ import { ApiResponse } from '@/core/api/types/api.types';
 import { AuthUser } from '@/features/auth/types/auth.types';
 
 export interface UpdateProfilePayload {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
-  institution?: string;
-  enableNotifications: boolean;
+  enableNotifications?: boolean;
   avatarEmoji?: string;
+  institution?: string;
   profilePictureUri?: string;
 }
 
@@ -22,5 +22,9 @@ export const userService = {
   async patchMe(payload: UpdateProfilePayload): Promise<AuthUser> {
     const { data } = await apiClient.patch<ApiResponse<AuthUser>>(ENDPOINTS.USERS_ME, payload);
     return data.data;
+  },
+
+  async deleteMe(): Promise<void> {
+    await apiClient.delete(ENDPOINTS.USERS_ME);
   },
 };

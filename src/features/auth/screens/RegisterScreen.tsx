@@ -11,6 +11,7 @@ import { OAuthButton } from '../components/OAuthButton';
 import { StudaFlyLogo } from '../components/StudaFlyLogo';
 import { useOAuthLogin, useRegister } from '../hooks/useLogin';
 import { OAuthProvider } from '../types/auth.types';
+import { getApiErrorMessage } from '@/core/api/errors';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Register'>;
 
@@ -31,7 +32,12 @@ export function RegisterScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
 
   const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
-  const { mutate: register, isPending: registerPending, isSuccess: registerSuccess } = useRegister();
+  const {
+    mutate: register,
+    isPending: registerPending,
+    isSuccess: registerSuccess,
+    error: registerError,
+  } = useRegister();
 
   const isAnyLoading = oauthPending || registerPending;
   const emailError = emailTouched ? validateEmail(email) : undefined;
@@ -117,6 +123,7 @@ export function RegisterScreen({ navigation }: Props) {
             autoComplete="new-password"
             value={password}
             onChangeText={setPassword}
+            error={registerError ? getApiErrorMessage(registerError) : undefined}
             style={styles.inputDark}
             placeholderTextColor={DARK_PLACEHOLDER_COLOR}
           />

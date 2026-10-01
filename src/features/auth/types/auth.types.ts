@@ -2,14 +2,19 @@ export type UserRole = 'student' | 'admin' | 'superadmin';
 export type OAuthProvider = 'google' | 'microsoft' | 'apple';
 export type MobilityTypeOption = 'erasmus' | 'stage' | 'semestre' | 'double_diplome';
 
+/** User as returned by the backend (UserRead). */
 export interface AuthUser {
   id: string;
   email: string;
   name: string;
   role: UserRole;
-  profilePicture?: string;
-  institutionId?: string;
+  institutionId: string | null;
   isPremium: boolean;
+  emailVerified: boolean;
+  oauthProvider: string | null;
+  avatarEmoji: string | null;
+  phone: string | null;
+  enableNotifications: boolean;
   createdAt: string;
 }
 
@@ -42,6 +47,7 @@ export interface CreateProfilePayload {
 export interface OnboardingData {
   mobilityType: MobilityTypeOption | null;
   destination: string;
+  destinationId: string | null;
   departureDate: string;
   school: string;
 }

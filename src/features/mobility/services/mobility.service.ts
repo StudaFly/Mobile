@@ -1,7 +1,7 @@
 import apiClient from '@/core/api/client';
 import { ENDPOINTS } from '@/core/api/endpoints';
 import { ApiResponse } from '@/core/api/types/api.types';
-import { Mobility } from '../types/mobility.types';
+import { Destination, Mobility, MobilityProgress } from '../types/mobility.types';
 import { MobilityTypeOption } from '@/features/auth/types/auth.types';
 
 export interface DestinationSearchResult {
@@ -32,6 +32,16 @@ export const mobilityService = {
     const { data } = await apiClient.get<ApiResponse<DestinationSearchResult[]>>(ENDPOINTS.DESTINATIONS, {
       params: { query },
     });
+    return data.data;
+  },
+
+  async getProgress(id: string): Promise<MobilityProgress> {
+    const { data } = await apiClient.get<ApiResponse<MobilityProgress>>(ENDPOINTS.MOBILITY_PROGRESS(id));
+    return data.data;
+  },
+
+  async getDestination(id: string): Promise<Destination> {
+    const { data } = await apiClient.get<ApiResponse<Destination>>(`${ENDPOINTS.DESTINATIONS}/${id}`);
     return data.data;
   },
 

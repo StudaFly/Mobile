@@ -9,12 +9,12 @@ import { TextInput } from '@/design-system/components/forms/TextInput';
 import { colors, radii, spacing } from '@/design-system/tokens';
 import { AuthStackParamList } from '@/navigation/types';
 import { userService } from '@/features/profile/services/user.service';
+import { useReference } from '@/core/reference';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'CreateProfile'>;
 
-const AVATAR_EMOJIS = ['🎓', '✈️', '🌍', '📚', '🏃', '🎨', '🎸', '🍕', '🌊', '🦁'];
-
 export function CreateProfileScreen({ navigation }: Props) {
+  const { avatarEmojis } = useReference();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -96,7 +96,7 @@ export function CreateProfileScreen({ navigation }: Props) {
 
           <Text variant="label" style={styles.emojiLabel}>Ou choisis un avatar</Text>
           <View style={styles.emojiGrid}>
-            {AVATAR_EMOJIS.map((emoji) => (
+            {avatarEmojis.map((emoji) => (
               <TouchableOpacity
                 key={emoji}
                 style={[styles.emojiItem, selectedEmoji === emoji && styles.emojiItemSelected]}

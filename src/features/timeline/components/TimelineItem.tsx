@@ -4,18 +4,8 @@ import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import type { TimelineTask } from '../types/timeline.types';
-import type { TaskCategory } from '@/features/checklist';
-
-const CATEGORY_META: Record<
-  TaskCategory,
-  { label: string; iconName: string; color: string; bg: string }
-> = {
-  admin: { label: 'Admin', iconName: 'FileText', color: colors.blue, bg: '#EEF2FF' },
-  finance: { label: 'Finance', iconName: 'CreditCard', color: colors.gold, bg: '#FFFBEB' },
-  health: { label: 'Santé', iconName: 'Heart', color: colors.danger, bg: '#FEF2F2' },
-  housing: { label: 'Logement', iconName: 'Home', color: colors.success, bg: '#F0FDF4' },
-  practical: { label: 'Pratique', iconName: 'Smartphone', color: colors.warning, bg: '#FFFBEB' },
-};
+import { CATEGORY_META } from '@/features/checklist/categoryMeta';
+import { useReference } from '@/core/reference';
 
 function formatDeadline(dateString: string): string {
   const date = new Date(dateString);
@@ -23,12 +13,6 @@ function formatDeadline(dateString: string): string {
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const y = date.getFullYear();
   return `${d}/${m}/${y}`;
-}
-
-function getDaysUntil(dateString: string): number {
-  const now = new Date();
-  const target = new Date(dateString);
-  return Math.ceil((target.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 interface TimelineItemProps {
@@ -40,8 +24,9 @@ interface TimelineItemProps {
 
 export function TimelineItem({ task, isFirst, isLast, onComplete }: TimelineItemProps) {
   const meta = CATEGORY_META[task.category];
+  const { categoryLabel } = useReference();
   const isUrgent = !task.isCompleted && task.priority === 1;
-  const isOverdue = task.deadline ? getDaysUntil(task.deadline) < 0 : false;
+  const isOverdue = (task.daysUntilDeadline ?? 0) < 0;
 
   return (
     <View style={styles.wrapper}>
@@ -73,7 +58,7 @@ export function TimelineItem({ task, isFirst, isLast, onComplete }: TimelineItem
         <View style={styles.cardHeader}>
           <View style={[styles.categoryTag, { backgroundColor: meta.bg }]}>
             <Text variant="caption" style={[styles.categoryLabel, { color: meta.color }]}>
-              {meta.label}
+              {categoryLabel(task.category)}
             </Text>
           </View>
           {isUrgent && (

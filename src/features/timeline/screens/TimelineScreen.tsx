@@ -11,6 +11,10 @@ import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, spacing } from '@/design-system/tokens';
 import { B2CStackParamList } from '@/navigation/types';
 import { useTimeline } from '../hooks/useTimeline';
+import { useTaskMutation } from '@/features/checklist/hooks/useTaskMutation';
+import { useActiveDestination } from '@/features/mobility/hooks/useActiveDestination';
+import { useMobility } from '@/features/mobility/hooks/useMobility';
+import { useReference } from '@/core/reference';
 import { CategoryFilter } from '../components/CategoryFilter';
 import { TimelineItem } from '../components/TimelineItem';
 import { TimelineSection } from '../components/TimelineSection';
@@ -33,9 +37,18 @@ export function TimelineScreen() {
     isRefetching,
   } = useTimeline(activeFilter);
 
-  const handleComplete = () => {
-    // TODO: wire to mutation when backend is ready
+  const { data: mobility } = useMobility();
+  const { data: destination } = useActiveDestination();
+  const { mobilityTypeLabel } = useReference();
+  const { completeTask } = useTaskMutation(mobilityId ?? '');
+
+  const handleComplete = (taskId: string) => {
+    completeTask.mutate(taskId);
   };
+
+  const subtitle = [destination?.city, mobility ? mobilityTypeLabel(mobility.type) : null]
+    .filter(Boolean)
+    .join(' · ');
 
   if (!mobilityId) {
     return (
@@ -79,7 +92,7 @@ export function TimelineScreen() {
             <View style={styles.destinationRow}>
               <Icon name="MapPin" size={14} color="rgba(255,255,255,0.7)" />
               <Text variant="caption" style={styles.destinationText}>
-                Barcelone · Erasmus
+                {subtitle}
               </Text>
             </View>
           </View>

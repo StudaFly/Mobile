@@ -3,15 +3,7 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, spacing } from '@/design-system/tokens';
 import type { TimelineFilter } from '../types/timeline.types';
-
-const FILTERS: { id: TimelineFilter; label: string }[] = [
-  { id: 'all', label: 'Toutes' },
-  { id: 'admin', label: 'Admin' },
-  { id: 'finance', label: 'Finance' },
-  { id: 'health', label: 'Santé' },
-  { id: 'housing', label: 'Logement' },
-  { id: 'practical', label: 'Pratique' },
-];
+import { useReference } from '@/core/reference';
 
 interface CategoryFilterProps {
   activeFilter: TimelineFilter;
@@ -19,6 +11,11 @@ interface CategoryFilterProps {
 }
 
 export function CategoryFilter({ activeFilter, onFilterChange }: CategoryFilterProps) {
+  const { taskCategories } = useReference();
+  const FILTERS: { id: TimelineFilter; label: string }[] = [
+    { id: 'all', label: 'Toutes' },
+    ...taskCategories.map((c) => ({ id: c.key as TimelineFilter, label: c.label })),
+  ];
   return (
     <View style={styles.wrapper}>
       <ScrollView
