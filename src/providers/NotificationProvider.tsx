@@ -7,7 +7,7 @@ interface NotificationProviderProps {
 
 export function NotificationProvider({ children }: NotificationProviderProps) {
   useEffect(() => {
-    // TODO: Enregistrer l'appareil pour les push notifications
+    // TODO: Register the device for push notifications
   }, []);
 
   return <>{children}</>;

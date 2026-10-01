@@ -8,6 +8,9 @@ import { B2CStack } from './stacks/B2CStack';
 import { B2BStack } from './stacks/B2BStack';
 import { RootStackParamList } from './types';
 import { secureStorage } from '@/core/storage/secureStorage';
+import { onSessionExpired } from '@/core/api/client';
+import { getApiErrorStatus } from '@/core/api/errors';
+import { clearLocalSession } from '@/features/auth/session';
 import { userService } from '@/features/profile/services/user.service';
 import { mobilityService } from '@/features/mobility/services/mobility.service';
 import { useMobilityStore } from '@/features/mobility/store/mobility.store';
@@ -15,9 +18,11 @@ import { useMobilityStore } from '@/features/mobility/store/mobility.store';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function RootNavigator() {
-  const { isAuthenticated, role, setUser, clearAuth } = useAuthStore();
+  const { isAuthenticated, role, setUser } = useAuthStore();
   const setActiveMobilityId = useMobilityStore((s) => s.setActiveMobilityId);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
+
+  useEffect(() => onSessionExpired(clearLocalSession), []);
 
   useEffect(() => {
     async function bootstrap() {
@@ -31,8 +36,9 @@ export function RootNavigator() {
             setActiveMobilityId(mobilities[0].id);
           }
         }
-      } catch {
-        await clearAuth();
+      } catch (err) {
+        const status = getApiErrorStatus(err);
+        if (status === 401 || status === 403) clearLocalSession();
       } finally {
         setIsBootstrapping(false);
       }
