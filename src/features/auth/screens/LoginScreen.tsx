@@ -11,6 +11,7 @@ import { OAuthButton } from '../components/OAuthButton';
 import { StudaFlyLogo } from '../components/StudaFlyLogo';
 import { useLogin, useOAuthLogin } from '../hooks/useLogin';
 import { OAuthProvider } from '../types/auth.types';
+import { getApiErrorMessage } from '@/core/api/errors';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
@@ -86,7 +87,7 @@ export function LoginScreen({ navigation }: Props) {
             onChangeText={setPassword}
             style={styles.inputDark}
             placeholderTextColor={DARK_PLACEHOLDER_COLOR}
-            error={loginError ? 'Email ou mot de passe incorrect' : undefined}
+            error={loginError ? getApiErrorMessage(loginError, 'Email ou mot de passe incorrect') : undefined}
           />
           <Button
             label="Se connecter"

@@ -38,6 +38,7 @@ export { Toast, ToastContainer } from './components/feedback/Toast';
 export { Skeleton } from './components/feedback/Skeleton';
 export { EmptyState } from './components/feedback/EmptyState';
 export { ErrorState } from './components/feedback/ErrorState';
+export { ComingSoon } from './components/feedback/ComingSoon';
 export { ConfettiOverlay } from './components/feedback/ConfettiOverlay';
 
 // Overlays

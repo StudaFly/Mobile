@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useAuthStore } from '../store/auth.store';
 import { OnboardingData } from '../types/auth.types';
-import { mobilityService } from '@/features/mobility/services/mobility.service';
+import { mobilityService, type DestinationSearchResult } from '@/features/mobility/services/mobility.service';
+import { formatDestination } from '@/features/mobility/utils';
 import { useMobilityStore } from '@/features/mobility/store/mobility.store';
 
 export const TOTAL_ONBOARDING_STEPS = 4;
@@ -17,6 +18,7 @@ export function useOnboarding() {
   const [data, setData] = useState<OnboardingData>({
     mobilityType: null,
     destination: '',
+    destinationId: null,
     departureDate: '',
     school: '',
   });
@@ -28,7 +30,14 @@ export function useOnboarding() {
   const prev = () => setStep((s) => Math.max(0, s - 1));
 
   const updateData = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
-    setData((d) => ({ ...d, [key]: value }));
+    setData((d) => ({
+      ...d,
+      [key]: value,
+      ...(key === 'destination' ? { destinationId: null } : {}),
+    }));
+
+  const selectDestination = (destination: DestinationSearchResult) =>
+    setData((d) => ({ ...d, destination: formatDestination(destination), destinationId: destination.id }));
 
   const isLastStep = step === TOTAL_ONBOARDING_STEPS - 1;
 
@@ -37,11 +46,11 @@ export function useOnboarding() {
       case 0:
         return data.mobilityType !== null;
       case 1:
-        return data.destination.trim().length > 0;
+        return data.destinationId !== null;
       case 2:
         return data.departureDate.trim().length > 0;
       case 3:
-        return true; // école optionnelle
+        return true;
       default:
         return false;
     }
@@ -49,11 +58,10 @@ export function useOnboarding() {
 
   const completeOnboardingMutation = useMutation({
     mutationFn: async () => {
-      const destinations = await mobilityService.searchDestinations(data.destination.trim());
-      if (!destinations.length) {
-        throw new Error(`Destination "${data.destination}" introuvable. Vérifie l'orthographe.`);
+      const { destinationId } = data;
+      if (!destinationId) {
+        throw new Error('Choisis ta destination dans la liste.');
       }
-      const destinationId = destinations[0].id;
 
       const mobility = await mobilityService.createMobility({
         destinationId,
@@ -76,6 +84,7 @@ export function useOnboarding() {
     next,
     prev,
     updateData,
+    selectDestination,
     isLastStep,
     canProceed,
     completeOnboarding: completeOnboardingMutation.mutate,

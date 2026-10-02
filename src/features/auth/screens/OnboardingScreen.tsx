@@ -11,6 +11,9 @@ import { MobilityTypeCard } from '../components/MobilityTypeCard';
 import { OnboardingStep } from '../components/OnboardingStep';
 import { useOnboarding, TOTAL_ONBOARDING_STEPS } from '../hooks/useOnboarding';
 import { MobilityTypeOption } from '../types/auth.types';
+import { getApiErrorMessage } from '@/core/api/errors';
+import { DestinationPicker } from '@/features/mobility/components/DestinationPicker';
+import { useReference } from '@/core/reference';
 
 
 interface MobilityOption {
@@ -19,12 +22,12 @@ interface MobilityOption {
   iconName: React.ComponentProps<typeof Icon>['name'];
 }
 
-const MOBILITY_OPTIONS: MobilityOption[] = [
-  { value: 'erasmus', label: 'Erasmus', iconName: 'Globe' },
-  { value: 'stage', label: 'Stage', iconName: 'Briefcase' },
-  { value: 'semestre', label: 'Semestre', iconName: 'BookOpen' },
-  { value: 'double_diplome', label: 'Double diplôme', iconName: 'GraduationCap' },
-];
+const MOBILITY_ICONS: Record<MobilityTypeOption, MobilityOption['iconName']> = {
+  erasmus: 'Globe',
+  stage: 'Briefcase',
+  semestre: 'BookOpen',
+  double_diplome: 'GraduationCap',
+};
 
 const STEP_CONFIG = [
   { title: 'Ton type de mobilité', subtitle: 'Quel programme as-tu choisi ?' },
@@ -86,7 +89,13 @@ function DateField({ value, onChange }: DateFieldProps) {
 }
 
 export function OnboardingScreen() {
-  const { step, data, next, prev, updateData, isLastStep, canProceed, completeOnboarding, isCompleting, completionError, totalSteps } =
+  const { mobilityTypes } = useReference();
+  const MOBILITY_OPTIONS: MobilityOption[] = mobilityTypes.map((t) => ({
+    value: t.key as MobilityTypeOption,
+    label: t.label,
+    iconName: MOBILITY_ICONS[t.key as MobilityTypeOption] ?? 'Globe',
+  }));
+  const { step, data, next, prev, updateData, selectDestination, isLastStep, canProceed, completeOnboarding, isCompleting, completionError, totalSteps } =
     useOnboarding();
 
   const config = STEP_CONFIG[step];
@@ -99,9 +108,7 @@ export function OnboardingScreen() {
     }
   };
 
-  const errorMessage = completionError instanceof Error
-    ? completionError.message
-    : completionError ? 'Une erreur est survenue. Réessaie.' : null;
+  const errorMessage = completionError ? getApiErrorMessage(completionError) : null;
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -134,12 +141,12 @@ export function OnboardingScreen() {
           )}
 
           {step === 1 && (
-            <TextInput
-              placeholder="ex: Barcelone, Berlin, Montréal…"
+            <DestinationPicker
               value={data.destination}
+              selectedId={data.destinationId}
               onChangeText={(v) => updateData('destination', v)}
-              autoCapitalize="words"
-              style={styles.inputLight}
+              onSelect={selectDestination}
+              inputStyle={styles.inputLight}
             />
           )}
 
@@ -175,7 +182,6 @@ export function OnboardingScreen() {
         </Text>
       </ScrollView>
 
-      {/* Footer — flex: 1 sur le bouton Suivant évite le débordement */}
       <View style={styles.footer}>
         {step > 0 && (
           <Button

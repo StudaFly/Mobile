@@ -3,17 +3,9 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, spacing } from '@/design-system/tokens';
 import { TaskCategory } from '../types/task.types';
+import { useReference } from '@/core/reference';
 
 export type ChecklistTab = TaskCategory | 'all';
-
-const TABS: { id: ChecklistTab; label: string }[] = [
-  { id: 'all', label: 'Toutes' },
-  { id: 'admin', label: 'Admin' },
-  { id: 'finance', label: 'Finance' },
-  { id: 'housing', label: 'Logement' },
-  { id: 'health', label: 'Santé' },
-  { id: 'practical', label: 'Pratique' },
-];
 
 interface TaskCategoryTabsProps {
   activeTab: ChecklistTab;
@@ -26,6 +18,11 @@ export function TaskCategoryTabs({
   onTabChange,
   taskCounts,
 }: TaskCategoryTabsProps) {
+  const { taskCategories } = useReference();
+  const TABS: { id: ChecklistTab; label: string }[] = [
+    { id: 'all', label: 'Toutes' },
+    ...taskCategories.map((c) => ({ id: c.key as ChecklistTab, label: c.label })),
+  ];
   return (
     <View style={styles.wrapper}>
       <ScrollView

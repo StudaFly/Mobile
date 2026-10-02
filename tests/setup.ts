@@ -19,3 +19,9 @@ console.error = (...args: Parameters<typeof console.error>) => {
   }
   originalError(...args);
 };
+
+jest.mock('../src/core/reference/reference.service', () => ({
+  referenceService: {
+    getReference: jest.fn(() => Promise.resolve(jest.requireActual('./fixtures/reference').REFERENCE)),
+  },
+}));

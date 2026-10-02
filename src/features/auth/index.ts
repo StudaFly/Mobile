@@ -2,6 +2,7 @@ export { useAuthStore } from './store/auth.store';
 export { useLogin, useOAuthLogin, useRegister } from './hooks/useLogin';
 export { useOnboarding, TOTAL_ONBOARDING_STEPS } from './hooks/useOnboarding';
 export { authService } from './services/auth.service';
+export { logout, clearLocalSession } from './session';
 export type {
   AuthUser,
   UserRole,

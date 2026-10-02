@@ -30,12 +30,14 @@ const createBaseHookReturn = (overrides: Partial<ReturnType<typeof useOnboarding
   data: {
     mobilityType: null as null | 'erasmus' | 'stage' | 'semestre' | 'double_diplome',
     destination: '',
+    destinationId: null as string | null,
     departureDate: '',
     school: '',
   },
   next: jest.fn(),
   prev: jest.fn(),
   updateData: jest.fn(),
+  selectDestination: jest.fn(),
   isLastStep: false,
   canProceed: jest.fn().mockReturnValue(true),
   completeOnboarding: jest.fn(),
@@ -57,12 +59,12 @@ describe('OnboardingScreen — step rendering branches', () => {
     jest.clearAllMocks();
   });
 
-  it('step 0 renders MobilityTypeCard grid', () => {
+  it('step 0 renders MobilityTypeCard grid (types from GET /reference)', async () => {
     mockUseOnboarding.mockReturnValue(createBaseHookReturn({ step: 0 }));
     const Wrapper = createQueryWrapper();
-    const { getByText } = render(<OnboardingScreen />, { wrapper: Wrapper });
+    const { getByText, findByText } = render(<OnboardingScreen />, { wrapper: Wrapper });
 
-    expect(getByText('Erasmus')).toBeDefined();
+    expect(await findByText('Erasmus')).toBeDefined();
     expect(getByText('Stage')).toBeDefined();
     expect(getByText('Semestre')).toBeDefined();
     expect(getByText('Double diplôme')).toBeDefined();
@@ -79,17 +81,17 @@ describe('OnboardingScreen — step rendering branches', () => {
 
   it('step 1 renders destination TextInput', () => {
     mockUseOnboarding.mockReturnValue(
-      createBaseHookReturn({ step: 1, data: { mobilityType: 'erasmus', destination: '', departureDate: '', school: '' } }),
+      createBaseHookReturn({ step: 1, data: { mobilityType: 'erasmus', destination: '', destinationId: null, departureDate: '', school: '' } }),
     );
     const Wrapper = createQueryWrapper();
     const { getByPlaceholderText } = render(<OnboardingScreen />, { wrapper: Wrapper });
 
-    expect(getByPlaceholderText('ex: Barcelone, Berlin, Montréal…')).toBeDefined();
+    expect(getByPlaceholderText('ex : Barcelone, Berlin, Lisbonne…')).toBeDefined();
   });
 
   it('step 1 shows Back button', () => {
     mockUseOnboarding.mockReturnValue(
-      createBaseHookReturn({ step: 1, data: { mobilityType: 'erasmus', destination: '', departureDate: '', school: '' } }),
+      createBaseHookReturn({ step: 1, data: { mobilityType: 'erasmus', destination: '', destinationId: null, departureDate: '', school: '' } }),
     );
     const Wrapper = createQueryWrapper();
     const { getByText } = render(<OnboardingScreen />, { wrapper: Wrapper });
@@ -101,7 +103,7 @@ describe('OnboardingScreen — step rendering branches', () => {
     mockUseOnboarding.mockReturnValue(
       createBaseHookReturn({
         step: 2,
-        data: { mobilityType: 'erasmus', destination: 'Barcelone', departureDate: '', school: '' },
+        data: { mobilityType: 'erasmus', destination: 'Barcelone', destinationId: 'dest-1', departureDate: '', school: '' },
       }),
     );
     const Wrapper = createQueryWrapper();
@@ -115,7 +117,7 @@ describe('OnboardingScreen — step rendering branches', () => {
       createBaseHookReturn({
         step: 3,
         isLastStep: true,
-        data: { mobilityType: 'erasmus', destination: 'Berlin', departureDate: '01/09/2024', school: '' },
+        data: { mobilityType: 'erasmus', destination: 'Berlin', destinationId: 'dest-2', departureDate: '01/09/2024', school: '' },
       }),
     );
     const Wrapper = createQueryWrapper();
@@ -162,7 +164,7 @@ describe('OnboardingScreen — step rendering branches', () => {
       createBaseHookReturn({
         step: 2,
         prev: mockPrev,
-        data: { mobilityType: 'erasmus', destination: 'Berlin', departureDate: '', school: '' },
+        data: { mobilityType: 'erasmus', destination: 'Berlin', destinationId: 'dest-2', departureDate: '', school: '' },
       }),
     );
     const Wrapper = createQueryWrapper();

@@ -17,6 +17,8 @@ import { Button } from '@/design-system/components/actions/Button';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { TaskCategory, TaskPriority } from '../types/task.types';
 import { CreateTaskPayload } from '../services/checklist.service';
+import { useReference } from '@/core/reference';
+import { CATEGORY_META } from '../categoryMeta';
 
 function formatDate(date: Date): string {
   const d = String(date.getDate()).padStart(2, '0');
@@ -29,19 +31,13 @@ function toISODate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-const CATEGORIES: { id: TaskCategory; label: string; icon: string; color: string }[] = [
-  { id: 'admin', label: 'Admin', icon: 'FileText', color: colors.blue },
-  { id: 'finance', label: 'Finance', icon: 'CreditCard', color: colors.gold },
-  { id: 'housing', label: 'Logement', icon: 'Home', color: colors.success },
-  { id: 'health', label: 'Santé', icon: 'Heart', color: colors.danger },
-  { id: 'practical', label: 'Pratique', icon: 'Smartphone', color: colors.warning },
-];
 
-const PRIORITIES: { value: TaskPriority; label: string; color: string; bg: string }[] = [
-  { value: 1, label: 'Urgent', color: colors.danger, bg: '#FEF2F2' },
-  { value: 2, label: 'Moyen', color: colors.warning, bg: '#FFFBEB' },
-  { value: 3, label: 'Faible', color: '#9CA3AF', bg: '#F3F4F6' },
-];
+// Visual style only: labels come from GET /reference.
+const PRIORITY_STYLE: Record<TaskPriority, { color: string; bg: string }> = {
+  1: { color: colors.danger, bg: '#FEF2F2' },
+  2: { color: colors.warning, bg: '#FFFBEB' },
+  3: { color: '#9CA3AF', bg: '#F3F4F6' },
+};
 
 interface AddTaskModalProps {
   visible: boolean;
@@ -51,6 +47,16 @@ interface AddTaskModalProps {
 }
 
 export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: AddTaskModalProps) {
+  const { taskCategories, taskPriorities } = useReference();
+  const CATEGORIES = taskCategories.map((c) => {
+    const meta = CATEGORY_META[c.key as TaskCategory];
+    return { id: c.key as TaskCategory, label: c.label, icon: meta.iconName, color: meta.color };
+  });
+  const PRIORITIES = taskPriorities.map((p) => ({
+    value: p.value as TaskPriority,
+    label: p.label,
+    ...PRIORITY_STYLE[p.value as TaskPriority],
+  }));
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<TaskCategory>('admin');
@@ -267,7 +273,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.4)',
   },
   sheet: {

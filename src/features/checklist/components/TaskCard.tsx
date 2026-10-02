@@ -12,6 +12,7 @@ import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { Task, TaskCategory } from '../types/task.types';
+import { useReference } from '@/core/reference';
 
 
 const DELETE_BUTTON_WIDTH = 88;
@@ -33,9 +34,9 @@ const CATEGORY_COLORS: Record<TaskCategory, string> = {
   practical: colors.warning,
 };
 
-const PRIORITY_LABEL: Record<number, { label: string; color: string; bg: string } | undefined> = {
-  1: { label: 'Urgent', color: colors.danger, bg: '#FEF2F2' },
-  2: { label: 'Moyen', color: colors.warning, bg: '#FFFBEB' },
+const PRIORITY_STYLE: Record<number, { color: string; bg: string } | undefined> = {
+  1: { color: colors.danger, bg: '#FEF2F2' },
+  2: { color: colors.warning, bg: '#FFFBEB' },
 };
 
 interface TaskCardProps {
@@ -53,7 +54,9 @@ export function TaskCard({ task, onComplete, onDelete }: TaskCardProps) {
 
   const categoryColor = CATEGORY_COLORS[task.category];
   const iconName = CATEGORY_ICONS[task.category];
-  const priorityInfo = PRIORITY_LABEL[task.priority];
+  const { priorityLabel } = useReference();
+  const priorityStyle = PRIORITY_STYLE[task.priority];
+  const priorityInfo = priorityStyle ? { ...priorityStyle, label: priorityLabel(task.priority) } : undefined;
 
   const close = () => {
     translateX.value = withSpring(0, { damping: 20, stiffness: 200 });

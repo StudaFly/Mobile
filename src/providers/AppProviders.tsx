@@ -5,6 +5,7 @@ import { QueryProvider } from './QueryProvider';
 import { ThemeProvider } from './ThemeProvider';
 import { NotificationProvider } from './NotificationProvider';
 import { RootNavigator } from '@/navigation/RootNavigator';
+import { ApiStatusBanner } from './ApiStatusBanner';
 
 export function AppProviders() {
   return (
@@ -14,6 +15,7 @@ export function AppProviders() {
           <ThemeProvider>
             <NotificationProvider>
               <RootNavigator />
+              <ApiStatusBanner />
             </NotificationProvider>
           </ThemeProvider>
         </QueryProvider>

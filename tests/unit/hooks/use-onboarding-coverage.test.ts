@@ -69,11 +69,26 @@ describe('useOnboarding — branch coverage', () => {
       expect(result.current.canProceed()).toBe(false);
     });
 
-    it('returns true when destination is non-empty', () => {
+    it('returns false while the destination is only typed, not picked', () => {
       const { result } = renderHook(() => useOnboarding(), { wrapper: createWrapper() });
       act(() => result.current.next());
       act(() => result.current.updateData('destination', 'Berlin'));
+      expect(result.current.canProceed()).toBe(false);
+    });
+
+    it('returns true once a destination is picked from the suggestions', () => {
+      const { result } = renderHook(() => useOnboarding(), { wrapper: createWrapper() });
+      act(() => result.current.next());
+      act(() => result.current.selectDestination({ id: 'dest-1', city: 'Berlin', country: 'Allemagne' }));
+      expect(result.current.data.destination).toBe('Berlin, Allemagne');
       expect(result.current.canProceed()).toBe(true);
+    });
+
+    it('typing again clears the picked destination', () => {
+      const { result } = renderHook(() => useOnboarding(), { wrapper: createWrapper() });
+      act(() => result.current.selectDestination({ id: 'dest-1', city: 'Berlin', country: 'Allemagne' }));
+      act(() => result.current.updateData('destination', 'Ber'));
+      expect(result.current.data.destinationId).toBeNull();
     });
   });
 
@@ -177,16 +192,19 @@ describe('useOnboarding — branch coverage', () => {
 
   describe('completeOnboarding()', () => {
     it('calls completePendingAuth after successful mutation', async () => {
-      mockSearchDestinations.mockResolvedValue([{ id: 'dest-uuid-1' }]);
       mockCreateMobility.mockResolvedValue({ id: 'mob-uuid-1' });
 
       const { result } = renderHook(() => useOnboarding(), { wrapper: createWrapper() });
       act(() => result.current.updateData('mobilityType', 'erasmus'));
-      act(() => result.current.updateData('destination', 'Barcelona'));
+      act(() => result.current.selectDestination({ id: 'dest-uuid-1', city: 'Barcelone', country: 'Espagne' }));
       act(() => result.current.updateData('departureDate', '01/09/2025'));
 
       await act(async () => { result.current.completeOnboarding(); });
       await waitFor(() => expect(mockCompletePendingAuth).toHaveBeenCalledTimes(1));
+      expect(mockCreateMobility).toHaveBeenCalledWith(
+        expect.objectContaining({ destinationId: 'dest-uuid-1', departureDate: '2025-09-01' }),
+      );
+      expect(mockSearchDestinations).not.toHaveBeenCalled();
     });
   });
 

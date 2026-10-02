@@ -14,6 +14,9 @@ import { OnboardingStep } from '@/features/auth/components/OnboardingStep';
 import { MobilityTypeOption } from '@/features/auth/types/auth.types';
 import { B2CStackParamList } from '@/navigation/types';
 import { useCreateMobility, TOTAL_CREATE_STEPS } from '../hooks/useCreateMobility';
+import { getApiErrorMessage } from '@/core/api/errors';
+import { DestinationPicker } from '@/features/mobility/components/DestinationPicker';
+import { useReference } from '@/core/reference';
 
 interface MobilityOption {
   value: MobilityTypeOption;
@@ -21,12 +24,12 @@ interface MobilityOption {
   iconName: React.ComponentProps<typeof Icon>['name'];
 }
 
-const MOBILITY_OPTIONS: MobilityOption[] = [
-  { value: 'erasmus', label: 'Erasmus', iconName: 'Globe' },
-  { value: 'stage', label: 'Stage', iconName: 'Briefcase' },
-  { value: 'semestre', label: 'Semestre', iconName: 'BookOpen' },
-  { value: 'double_diplome', label: 'Double diplôme', iconName: 'GraduationCap' },
-];
+const MOBILITY_ICONS: Record<MobilityTypeOption, MobilityOption['iconName']> = {
+  erasmus: 'Globe',
+  stage: 'Briefcase',
+  semestre: 'BookOpen',
+  double_diplome: 'GraduationCap',
+};
 
 const STEP_CONFIG = [
   { title: 'Ton type de mobilité', subtitle: 'Quel programme as-tu choisi ?' },
@@ -88,9 +91,15 @@ function DateField({ value, onChange }: DateFieldProps) {
 }
 
 export function CreateMobilityScreen() {
+  const { mobilityTypes } = useReference();
+  const MOBILITY_OPTIONS: MobilityOption[] = mobilityTypes.map((t) => ({
+    value: t.key as MobilityTypeOption,
+    label: t.label,
+    iconName: MOBILITY_ICONS[t.key as MobilityTypeOption] ?? 'Globe',
+  }));
   const navigation = useNavigation<NativeStackNavigationProp<B2CStackParamList>>();
 
-  const { step, data, next, prev, updateData, isLastStep, canProceed, createMobility, isCreating, creationError, totalSteps } =
+  const { step, data, next, prev, updateData, selectDestination, isLastStep, canProceed, createMobility, isCreating, creationError, totalSteps } =
     useCreateMobility(() => navigation.goBack());
 
   const config = STEP_CONFIG[step];
@@ -103,9 +112,7 @@ export function CreateMobilityScreen() {
     }
   };
 
-  const errorMessage = creationError instanceof Error
-    ? creationError.message
-    : creationError ? 'Une erreur est survenue. Réessaie.' : null;
+  const errorMessage = creationError ? getApiErrorMessage(creationError) : null;
 
   return (
     <ScreenWrapper style={styles.wrapper}>
@@ -147,12 +154,12 @@ export function CreateMobilityScreen() {
           )}
 
           {step === 1 && (
-            <TextInput
-              placeholder="ex: Barcelone, Berlin, Montréal…"
+            <DestinationPicker
               value={data.destination}
+              selectedId={data.destinationId}
               onChangeText={(v) => updateData('destination', v)}
-              autoCapitalize="words"
-              style={styles.inputLight}
+              onSelect={selectDestination}
+              inputStyle={styles.inputLight}
             />
           )}
 

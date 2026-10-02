@@ -7,13 +7,28 @@ export interface Mobility {
   destinationId: string;
   type: MobilityType;
   departureDate: string;
-  returnDate?: string;
+  returnDate: string | null;
   status: MobilityStatus;
+  school: string | null;
+  createdAt: string;
+  daysUntilDeparture: number;
+  stayMonths: number | null;
+}
+
+export interface MobilityProgress {
+  mobilityId: string;
+  totalTasks: number;
+  completedTasks: number;
+  percent: number;
+  daysUntilDeparture: number;
+  overdueTasks: number;
+  byCategory: { category: string; label: string; done: number; total: number }[];
+  nextTasks: import('@/features/timeline/types/timeline.types').TimelineTask[];
 }
 
 export interface Destination {
   id: string;
   city: string;
   country: string;
-  universityName?: string;
 }
+

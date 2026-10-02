@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { OnboardingData } from '@/features/auth/types/auth.types';
-import { mobilityService } from '../services/mobility.service';
+import { mobilityService, type DestinationSearchResult } from '../services/mobility.service';
+import { formatDestination } from '../utils';
 import { useMobilityStore } from '../store/mobility.store';
 
 export const TOTAL_CREATE_STEPS = 4;
@@ -16,6 +17,7 @@ export function useCreateMobility(onSuccess: () => void) {
   const [data, setData] = useState<OnboardingData>({
     mobilityType: null,
     destination: '',
+    destinationId: null,
     departureDate: '',
     school: '',
   });
@@ -26,14 +28,21 @@ export function useCreateMobility(onSuccess: () => void) {
   const prev = () => setStep((s) => Math.max(0, s - 1));
 
   const updateData = <K extends keyof OnboardingData>(key: K, value: OnboardingData[K]) =>
-    setData((d) => ({ ...d, [key]: value }));
+    setData((d) => ({
+      ...d,
+      [key]: value,
+      ...(key === 'destination' ? { destinationId: null } : {}),
+    }));
+
+  const selectDestination = (destination: DestinationSearchResult) =>
+    setData((d) => ({ ...d, destination: formatDestination(destination), destinationId: destination.id }));
 
   const isLastStep = step === TOTAL_CREATE_STEPS - 1;
 
   const canProceed = (): boolean => {
     switch (step) {
       case 0: return data.mobilityType !== null;
-      case 1: return data.destination.trim().length > 0;
+      case 1: return data.destinationId !== null;
       case 2: return data.departureDate.trim().length > 0;
       case 3: return true;
       default: return false;
@@ -42,11 +51,10 @@ export function useCreateMobility(onSuccess: () => void) {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const destinations = await mobilityService.searchDestinations(data.destination.trim());
-      if (!destinations.length) {
-        throw new Error(`Destination "${data.destination}" introuvable. Vérifie l'orthographe.`);
+      const { destinationId } = data;
+      if (!destinationId) {
+        throw new Error('Choisis ta destination dans la liste.');
       }
-      const destinationId = destinations[0].id;
       const mobility = await mobilityService.createMobility({
         destinationId,
         type: data.mobilityType!,
@@ -67,6 +75,7 @@ export function useCreateMobility(onSuccess: () => void) {
     next,
     prev,
     updateData,
+    selectDestination,
     isLastStep,
     canProceed,
     createMobility: mutation.mutate,
