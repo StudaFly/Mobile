@@ -7,7 +7,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 export default [
   js.configs.recommended,
   {
-    files: ["**/*.{ts,tsx}"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
@@ -21,6 +21,12 @@ export default [
         require: "readonly",
         process: "readonly",
         __dirname: "readonly",
+        __DEV__: "readonly",
+        global: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
         describe: "readonly",
         it: "readonly",
         expect: "readonly",
@@ -46,12 +52,30 @@ export default [
     },
   },
   {
-    files: ["**/*.js"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       globals: {
         module: "readonly",
         require: "readonly",
         __dirname: "readonly",
+      },
+    },
+  },
+  {
+    files: ["tests/**/*.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      sourceType: "module",
+      globals: {
+        process: "readonly",
+        console: "readonly",
+        fetch: "readonly",
+        setTimeout: "readonly",
       },
     },
   },

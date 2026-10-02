@@ -1,0 +1,1 @@
+export { TouchableScale } from './TouchableScale';
