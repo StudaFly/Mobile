@@ -1,36 +1,34 @@
-name: Task
-description: Tâche technique
-title: "[Task]: "
-labels: ["task"]
+name: "Technical Task & Maintenance"
+description: "Expo updates, React Native upgrades, build configs, native modules"
+title: "[TASK]: "
+labels: ["technical", "mobile"]
 body:
   - type: dropdown
-    id: type
+    id: task_category
     attributes:
-      label: Type de tâche
+      label: "Task Category"
       options:
-        - Refactoring
-        - Dette technique
-        - Configuration
-        - Dépendances
-        - CI/CD
-        - Documentation
-        - Tests
+        - "Expo / React Native Upgrade"
+        - "EAS Build / Deployment Configuration"
+        - "Performance & Animation Optimization"
+        - "Native Module Integration"
+        - "Testing (Jest / Detox)"
     validations:
       required: true
 
   - type: textarea
     id: description
     attributes:
-      label: Description
+      label: "Task Description"
     validations:
       required: true
 
   - type: textarea
-    id: acceptance
+    id: acceptance_criteria
     attributes:
-      label: Critères de complétion
+      label: "Acceptance Criteria"
       placeholder: |
-        - [ ] Les tests passent
-        - [ ] La CI est verte
+        - [ ] Builds successfully on EAS (iOS & Android)
+        - [ ] App launches without errors on physical device
     validations:
       required: true
