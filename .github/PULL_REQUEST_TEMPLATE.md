@@ -1,25 +1,25 @@
 ## Description
-
 Closes #
 
-## Type de changement
+## Type of Change
+- [ ] Bug fix (Mobile crash / UI fix)
+- [ ] New mobile feature / Screen
+- [ ] Native Module / Expo Config change
+- [ ] Performance optimization / Refactoring
+- [ ] EAS / Build pipeline change
 
-- [ ] Bug fix
-- [ ] Nouvelle fonctionnalité
-- [ ] Breaking change
-- [ ] Refactoring
-- [ ] Documentation
-- [ ] Tests
+## Platforms Tested
+- [ ] iOS Simulator / Physical iPhone
+- [ ] Android Emulator / Physical Android Device
+- [ ] Expo Go / Dev Client
 
-## Comment tester ?
+## Screenshots / Screen Recording
+| iOS | Android |
+| --- | --- |
+| _Attach screenshot/video_ | _Attach screenshot/video_ |
 
-
-
-## Checklist
-
-- [ ] Mon code respecte les conventions du projet
-- [ ] J'ai testé mes changements localement
-- [ ] Les tests passent
-- [ ] La CI est verte
-
----
+## Pre-Merge Checklist
+- [ ] Code formatted and linted
+- [ ] Tested on both iOS and Android views
+- [ ] Tested offline state / network transitions (if applicable)
+- [ ] No memory leaks or performance dips in animations

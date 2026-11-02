@@ -1,31 +1,42 @@
-name: Feature Request
-description: Proposer une nouvelle fonctionnalité
-title: "[Feature]: "
-labels: ["feature"]
+name: "Feature Request"
+description: "Propose a mobile screen, native feature, or push notification interaction"
+title: "[FEAT]: "
+labels: ["feature", "mobile"]
 body:
   - type: textarea
     id: problem
     attributes:
-      label: Problème à résoudre
-      placeholder: "En tant qu'utilisateur, je suis frustré quand..."
+      label: "Problem / User Requirement"
+      placeholder: "As a student traveling abroad, I need offline access to my checklist so that..."
     validations:
       required: true
 
   - type: textarea
     id: solution
     attributes:
-      label: Solution proposée
+      label: "Proposed Feature / Native Capabilities"
+      placeholder: "Implement local storage caching for offline mode, send push notification via FCM..."
     validations:
       required: true
+
+  - type: checkboxes
+    id: native_capabilities
+    attributes:
+      label: "Native Capabilities Needed"
+      options:
+        - label: "Push Notifications (FCM / APNs)"
+        - label: "Camera / Document Scanner"
+        - label: "Local Storage / Offline Support"
+        - label: "Biometric Auth (FaceID / Fingerprint)"
 
   - type: dropdown
     id: priority
     attributes:
-      label: Priorité MoSCoW
+      label: "Priority (MoSCoW)"
       options:
-        - Must Have (MVP)
-        - Should Have (v1.0)
-        - Could Have (v2.0+)
-        - Won't Have
+        - "Must Have (MVP)"
+        - "Should Have"
+        - "Could Have"
+        - "Won't Have"
     validations:
       required: true
