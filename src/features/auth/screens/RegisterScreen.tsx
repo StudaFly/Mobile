@@ -10,6 +10,7 @@ import { AuthStackParamList } from '@/navigation/types';
 import { OAuthButton } from '../components/OAuthButton';
 import { StudaFlyLogo } from '../components/StudaFlyLogo';
 import { useOAuthLogin, useRegister } from '../hooks/useLogin';
+import { isGoogleSignInCancelled } from '../services/googleSignIn.service';
 import { OAuthProvider } from '../types/auth.types';
 import { getApiErrorMessage } from '@/core/api/errors';
 
@@ -31,7 +32,12 @@ export function RegisterScreen({ navigation }: Props) {
   const [emailTouched, setEmailTouched] = useState(false);
   const [password, setPassword] = useState('');
 
-  const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
+  const {
+    mutate: oauthLogin,
+    isPending: oauthPending,
+    variables: oauthProvider,
+    error: oauthError,
+  } = useOAuthLogin();
   const {
     mutate: register,
     isPending: registerPending,
@@ -42,6 +48,7 @@ export function RegisterScreen({ navigation }: Props) {
   const isAnyLoading = oauthPending || registerPending;
   const emailError = emailTouched ? validateEmail(email) : undefined;
   const isEmailValid = EMAIL_REGEX.test(email.trim());
+  const showOAuthError = oauthError && !isGoogleSignInCancelled(oauthError);
 
   const handleRegister = () => {
     setEmailTouched(true);
@@ -53,7 +60,11 @@ export function RegisterScreen({ navigation }: Props) {
   };
 
   const handleOAuth = (provider: OAuthProvider) => {
-    oauthLogin({ provider, mockToken: `mock-${provider}-token` });
+    oauthLogin(provider, {
+      onSuccess: ({ isNewUser }) => {
+        if (isNewUser) navigation.navigate('CreateProfile');
+      },
+    });
   };
 
   useEffect(() => {
@@ -81,9 +92,14 @@ export function RegisterScreen({ navigation }: Props) {
               key={provider}
               provider={provider}
               onPress={() => handleOAuth(provider)}
-              isLoading={oauthPending}
+              isLoading={oauthPending && oauthProvider === provider}
             />
           ))}
+          {showOAuthError ? (
+            <Text variant="caption" style={styles.oauthError}>
+              {getApiErrorMessage(oauthError)}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.dividerRow}>
@@ -172,6 +188,10 @@ const styles = StyleSheet.create({
   },
   oauthSection: {
     gap: spacing.sm,
+  },
+  oauthError: {
+    color: colors.danger,
+    textAlign: 'center',
   },
   dividerRow: {
     flexDirection: 'row',

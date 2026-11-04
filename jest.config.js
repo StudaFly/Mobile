@@ -1,5 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
+  // Official mock of the native Google Sign-In module (JS logic of the library stays real).
+  setupFiles: ['<rootDir>/node_modules/@react-native-google-signin/google-signin/jest/build/jest/setup.js'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testPathIgnorePatterns: ['/node_modules/', '/.expo/'],
   testMatch: ['**/tests/unit/**/*.test.{ts,tsx}'],

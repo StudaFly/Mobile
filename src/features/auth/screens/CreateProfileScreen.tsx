@@ -10,13 +10,21 @@ import { colors, radii, spacing } from '@/design-system/tokens';
 import { AuthStackParamList } from '@/navigation/types';
 import { userService } from '@/features/profile/services/user.service';
 import { useReference } from '@/core/reference';
+import { useAuthStore } from '../store/auth.store';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'CreateProfile'>;
 
+function splitName(name: string | undefined): [string, string] {
+  const [first = '', ...rest] = (name ?? '').trim().split(/\s+/);
+  return [first, rest.join(' ')];
+}
+
 export function CreateProfileScreen({ navigation }: Props) {
   const { avatarEmojis } = useReference();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  // Name typed at sign-up, or given by Google.
+  const pendingName = useAuthStore((s) => s.pendingUser?.name);
+  const [firstName, setFirstName] = useState(() => splitName(pendingName)[0]);
+  const [lastName, setLastName] = useState(() => splitName(pendingName)[1]);
   const [phone, setPhone] = useState('');
   const [institution, setInstitution] = useState('');
   const [enableNotifications, setEnableNotifications] = useState(true);

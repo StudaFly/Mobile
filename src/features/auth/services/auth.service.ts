@@ -7,6 +7,8 @@ export interface AuthResponse {
   user: AuthUser;
   accessToken: string;
   refreshToken: string;
+  /** True right after an OAuth sign-up: the user goes through CreateProfile → Onboarding. */
+  isNewUser?: boolean;
 }
 
 const OAUTH_ENDPOINTS: Record<OAuthProvider, string> = {
@@ -29,7 +31,7 @@ export const authService = {
 
   async oauthLogin(payload: OAuthLoginPayload): Promise<AuthResponse> {
     const endpoint = OAUTH_ENDPOINTS[payload.provider];
-    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(endpoint, { token: payload.mockToken });
+    const { data } = await apiClient.post<ApiResponse<AuthResponse>>(endpoint, { idToken: payload.idToken });
     return data.data;
   },
 
