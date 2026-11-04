@@ -9,7 +9,6 @@ import { timelineService } from '../../src/features/timeline/services/timeline.s
 import { documentsService } from '../../src/features/documents/services/documents.service';
 import { guideService } from '../../src/features/guide/services/guide.service';
 import { userService } from '../../src/features/profile/services/user.service';
-import { adminService } from '../../src/features/b2b/services/admin.service';
 import { notificationsService } from '../../src/features/notifications/services/notifications.service';
 
 import { useChecklist } from '../../src/features/checklist/hooks/useChecklist';
@@ -17,8 +16,6 @@ import { useTaskMutation } from '../../src/features/checklist/hooks/useTaskMutat
 import { useTimeline } from '../../src/features/timeline/hooks/useTimeline';
 import { useDocuments } from '../../src/features/documents/hooks/useDocuments';
 import { useOfflineDocuments } from '../../src/features/documents/hooks/useOfflineDocuments';
-import { useB2BDashboard } from '../../src/features/b2b/hooks/useB2BDashboard';
-import { useStudents } from '../../src/features/b2b/hooks/useStudents';
 import { useJourJ } from '../../src/features/jourj/hooks/useJourJ';
 import { usePushNotifications } from '../../src/features/notifications/hooks/usePushNotifications';
 
@@ -45,10 +42,6 @@ describe('Empty services', () => {
 
   it('userService is defined', () => {
     expect(userService).toBeDefined();
-  });
-
-  it('adminService is defined', () => {
-    expect(adminService).toBeDefined();
   });
 
   it('notificationsService is defined', () => {
@@ -87,14 +80,6 @@ describe('Empty hooks', () => {
 
   it('useOfflineDocuments is callable', () => {
     expect(() => useOfflineDocuments()).not.toThrow();
-  });
-
-  it('useB2BDashboard is callable', () => {
-    expect(() => useB2BDashboard()).not.toThrow();
-  });
-
-  it('useStudents is callable', () => {
-    expect(() => useStudents()).not.toThrow();
   });
 
   it('useJourJ is callable', () => {

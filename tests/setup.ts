@@ -25,3 +25,8 @@ jest.mock('../src/core/reference/reference.service', () => ({
     getReference: jest.fn(() => Promise.resolve(jest.requireActual('./fixtures/reference').REFERENCE)),
   },
 }));
+
+jest.mock('expo-linking', () => ({
+  createURL: (path: string) => `studafly://${path.replace(/^\//, '')}`,
+  openURL: jest.fn(),
+}));

@@ -38,22 +38,6 @@ import { CreateProfileScreen } from '../../../src/features/auth/screens/CreatePr
 import { OnboardingScreen } from '../../../src/features/auth/screens/OnboardingScreen';
 import { SplashScreen } from '../../../src/features/auth/screens/SplashScreen';
 
-// B2B feature components
-import { AlertBanner } from '../../../src/features/b2b/components/AlertBanner';
-import { BrandingPreview } from '../../../src/features/b2b/components/BrandingPreview';
-import { ProgressChart } from '../../../src/features/b2b/components/ProgressChart';
-import { StudentProgressCard } from '../../../src/features/b2b/components/StudentProgressCard';
-
-// B2B screens
-import { B2BDashboardScreen } from '../../../src/features/b2b/screens/B2BDashboardScreen';
-import { StudentsScreen } from '../../../src/features/b2b/screens/StudentsScreen';
-import { AlertsScreen } from '../../../src/features/b2b/screens/AlertsScreen';
-import { StatsScreen } from '../../../src/features/b2b/screens/StatsScreen';
-import { SchoolTasksScreen } from '../../../src/features/b2b/screens/SchoolTasksScreen';
-import { SettingsScreen } from '../../../src/features/b2b/screens/SettingsScreen';
-import { StudentDetailScreen } from '../../../src/features/b2b/screens/StudentDetailScreen';
-import { BrandingScreen } from '../../../src/features/b2b/screens/BrandingScreen';
-
 // Budget
 import { LifestyleSlider } from '../../../src/features/budget/components/LifestyleSlider';
 import { SavingTipCard } from '../../../src/features/budget/components/SavingTipCard';
@@ -96,18 +80,6 @@ const createQueryWrapper = () => {
 
 // Stubs that need no special props (auth components excluded — they have dedicated tests)
 const stubs = [
-  ['AlertBanner', AlertBanner],
-  ['BrandingPreview', BrandingPreview],
-  ['ProgressChart', ProgressChart],
-  ['StudentProgressCard', StudentProgressCard],
-  ['B2BDashboardScreen', B2BDashboardScreen],
-  ['StudentsScreen', StudentsScreen],
-  ['AlertsScreen', AlertsScreen],
-  ['StatsScreen', StatsScreen],
-  ['SchoolTasksScreen', SchoolTasksScreen],
-  ['SettingsScreen', SettingsScreen],
-  ['StudentDetailScreen', StudentDetailScreen],
-  ['BrandingScreen', BrandingScreen],
   ['LifestyleSlider', LifestyleSlider],
   ['SavingTipCard', SavingTipCard],
   ['DocumentCard', DocumentCard],
