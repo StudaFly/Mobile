@@ -63,7 +63,7 @@ export function ProfileScreen() {
   const confirmDelete = () =>
     Alert.alert(
       'Supprimer mon compte',
-      'Ton compte, ta mobilité et toutes tes tâches seront définitivement supprimés. Cette action est irréversible.',
+      'Tu seras déconnecté·e tout de suite. Ton compte, ta mobilité et toutes tes tâches seront définitivement effacés dans 30 jours.',
       [
         { text: 'Annuler', style: 'cancel' },
         {
@@ -100,7 +100,7 @@ export function ProfileScreen() {
               <Text variant="caption" style={styles.email}>{user.email}</Text>
               <View style={styles.chips}>
                 <View style={styles.chip}>
-                  <Text variant="caption" style={styles.chipText}>{user.isPremium ? '⭐ Premium' : 'Gratuit'}</Text>
+                  <Text variant="caption" style={styles.chipText}>{user.premium?.active ?? user.isPremium ? '⭐ Premium' : 'Gratuit'}</Text>
                 </View>
                 {destination ? (
                   <View style={styles.chip}>
@@ -153,6 +153,12 @@ export function ProfileScreen() {
             title="Ma mobilité"
             subtitle={mobility?.school ? `${mobilitySubtitle}\n${mobility.school}` : mobilitySubtitle}
             onPress={mobility ? undefined : () => navigation.navigate('CreateMobility')}
+          />
+          <Row
+            iconName="Building2"
+            title="Mon établissement"
+            subtitle={user.organization ? user.organization.name : 'Rejoindre mon école avec son code'}
+            onPress={() => navigation.navigate('MyOrganization')}
           />
         </View>
 

@@ -5,6 +5,7 @@ export type ApiUrlSource = 'app-config' | 'env' | 'metro-host' | 'localhost';
 interface Env {
   BASE_URL: string;
   BASE_URL_SOURCE: ApiUrlSource;
+  WEB_URL: string;
 }
 
 const API_PORT = 8080;
@@ -36,4 +37,5 @@ const resolved = resolveApiUrl();
 export const env: Env = {
   BASE_URL: resolved.url,
   BASE_URL_SOURCE: resolved.source,
+  WEB_URL: process.env.EXPO_PUBLIC_WEB_URL ?? 'http://localhost:5173',
 };

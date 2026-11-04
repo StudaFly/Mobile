@@ -6,6 +6,8 @@ export type RootStackParamList = {
   Auth: undefined;
   B2C: undefined;
   B2B: undefined;
+  WebOnly: undefined;
+  Invitation: { token: string };
 };
 
 export type AuthStackParamList = {
@@ -31,6 +33,7 @@ export type B2CStackParamList = {
   JourJ: undefined;
   EditProfile: undefined;
   CreateMobility: undefined;
+  MyOrganization: undefined;
 };
 
 export type B2BTabParamList = {
