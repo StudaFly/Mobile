@@ -14,6 +14,8 @@ import { useDashboard } from '../hooks/useDashboard';
 import { WelcomeHeader } from '../components/WelcomeHeader';
 import { NextDeadlines } from '../components/NextDeadlines';
 import { GlobalProgress } from '../components/GlobalProgress';
+import { SchoolBanner } from '@/features/organization/components/SchoolBanner';
+import { NotificationBellButton } from '@/features/notifications/components/NotificationBellButton';
 
 const QUICK_ACCESS = [
   { key: 'Timeline', label: 'Timeline', iconName: 'Clock', bg: '#EEF2FF' },
@@ -89,9 +91,11 @@ export function DashboardScreen() {
           totalCount={totalCount}
           onSeeAll={() => navigation.navigate('Checklist')}
           onAvatarPress={() => navigation.navigate('Profile')}
+          headerAction={<NotificationBellButton onPress={() => navigation.navigate('Notifications')} />}
         />
 
         <View style={styles.body}>
+          <SchoolBanner />
           <NextDeadlines
             tasks={nextTasks}
             onPressTask={() => navigation.navigate('Checklist')}

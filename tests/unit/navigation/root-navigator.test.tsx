@@ -1,24 +1,47 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { render, screen, waitFor } from '@testing-library/react-native';
 
 jest.mock('../../../src/features/auth', () => ({
   useAuthStore: jest.fn(),
+  WebOnlyScreen: () => {
+    const { Text: T } = jest.requireActual('react-native');
+    return <T>web only</T>;
+  },
+}));
+
+jest.mock('../../../src/features/organization', () => ({
+  InvitationScreen: () => null,
+  useInvitationStore: (selector: (s: { pendingToken: null }) => unknown) => selector({ pendingToken: null }),
 }));
 
 jest.mock('../../../src/navigation/stacks/AuthStack', () => ({
-  AuthStack: () => null,
+  AuthStack: () => {
+    const { Text: T } = jest.requireActual('react-native');
+    return <T>auth stack</T>;
+  },
 }));
 
 jest.mock('../../../src/navigation/stacks/B2CStack', () => ({
-  B2CStack: () => null,
+  B2CStack: () => {
+    const { Text: T } = jest.requireActual('react-native');
+    return <T>student space</T>;
+  },
 }));
 
 jest.mock('../../../src/navigation/stacks/B2BStack', () => ({
-  B2BStack: () => null,
+  B2BStack: () => {
+    const { Text: T } = jest.requireActual('react-native');
+    return <T>school staff space</T>;
+  },
+}));
+
+jest.mock('../../../src/core/storage/secureStorage', () => ({
+  secureStorage: { getToken: jest.fn(() => Promise.resolve(null)) },
 }));
 
 jest.mock('@react-navigation/native', () => ({
   NavigationContainer: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  createNavigationContainerRef: () => ({ isReady: () => false, navigate: jest.fn() }),
 }));
 
 jest.mock('@react-navigation/native-stack', () => ({
@@ -33,40 +56,33 @@ import { RootNavigator } from '../../../src/navigation/RootNavigator';
 
 const mockUseAuthStore = useAuthStore as unknown as jest.Mock;
 
-describe('RootNavigator — authentication branches', () => {
+const as = (isAuthenticated: boolean, accountType: string | null) =>
+  mockUseAuthStore.mockReturnValue({ isAuthenticated, accountType, setUser: jest.fn() });
+
+describe('RootNavigator — account type branches', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('renders AuthStack when user is not authenticated', () => {
-    mockUseAuthStore.mockReturnValue({ isAuthenticated: false, role: null });
+  it.each([
+    [false, null, 'auth stack'],
+    [true, 'student', 'student space'],
+    [true, 'org_staff', 'school staff space'],
+    [true, 'platform_admin', 'web only'],
+  ])('authenticated=%s accountType=%s → %s', async (isAuthenticated, accountType, expected) => {
+    as(isAuthenticated, accountType);
 
-    const { UNSAFE_root } = render(<RootNavigator />);
+    render(<RootNavigator />);
 
-    expect(UNSAFE_root).toBeDefined();
+    await waitFor(() => expect(screen.getByText(expected)).toBeTruthy());
   });
 
-  it('renders B2CStack when user is authenticated as student', () => {
-    mockUseAuthStore.mockReturnValue({ isAuthenticated: true, role: 'student' });
+  it('never shows the staff space to a student', async () => {
+    as(true, 'student');
 
-    const { UNSAFE_root } = render(<RootNavigator />);
+    render(<RootNavigator />);
 
-    expect(UNSAFE_root).toBeDefined();
-  });
-
-  it('renders B2BStack when user is authenticated as admin', () => {
-    mockUseAuthStore.mockReturnValue({ isAuthenticated: true, role: 'admin' });
-
-    const { UNSAFE_root } = render(<RootNavigator />);
-
-    expect(UNSAFE_root).toBeDefined();
-  });
-
-  it('renders B2BStack when user is authenticated as superadmin', () => {
-    mockUseAuthStore.mockReturnValue({ isAuthenticated: true, role: 'superadmin' });
-
-    const { UNSAFE_root } = render(<RootNavigator />);
-
-    expect(UNSAFE_root).toBeDefined();
+    await waitFor(() => expect(screen.getByText('student space')).toBeTruthy());
+    expect(screen.queryByText('school staff space')).toBeNull();
   });
 });

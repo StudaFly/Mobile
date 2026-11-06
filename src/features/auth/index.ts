@@ -19,6 +19,7 @@ export { LoginScreen } from './screens/LoginScreen';
 export { RegisterScreen } from './screens/RegisterScreen';
 export { CreateProfileScreen } from './screens/CreateProfileScreen';
 export { OnboardingScreen } from './screens/OnboardingScreen';
+export { WebOnlyScreen } from './screens/WebOnlyScreen';
 export { OAuthButton } from './components/OAuthButton';
 export { OAuthLogo } from './components/OAuthLogo';
 export { StudaFlyLogo } from './components/StudaFlyLogo';

@@ -9,6 +9,7 @@ interface Env {
   GOOGLE_WEB_CLIENT_ID: string;
   /** "iOS" OAuth client (Android identifies the app by package name + SHA-1). */
   GOOGLE_IOS_CLIENT_ID: string;
+  WEB_URL: string;
 }
 
 const API_PORT = 8080;
@@ -42,4 +43,5 @@ export const env: Env = {
   BASE_URL_SOURCE: resolved.source,
   GOOGLE_WEB_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID ?? '',
   GOOGLE_IOS_CLIENT_ID: process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID ?? '',
+  WEB_URL: process.env.EXPO_PUBLIC_WEB_URL ?? 'http://localhost:5173',
 };

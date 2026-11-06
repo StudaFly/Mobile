@@ -9,6 +9,7 @@ export interface AuthResponse {
   refreshToken: string;
   /** True right after an OAuth sign-up: the user goes through CreateProfile → Onboarding. */
   isNewUser?: boolean;
+  mfaRequired?: boolean;
 }
 
 const OAUTH_ENDPOINTS: Record<OAuthProvider, string> = {

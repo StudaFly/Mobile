@@ -7,6 +7,7 @@ import {
 } from '@/features/b2b';
 import { B2BTabNavigator } from '../tabs/B2BTabNavigator';
 import { B2BStackParamList } from '../types';
+import { NotificationsScreen } from '@/features/notifications/screens/NotificationsScreen';
 
 const Stack = createNativeStackNavigator<B2BStackParamList>();
 
@@ -17,6 +18,7 @@ export function B2BStack() {
       <Stack.Screen name="StudentDetail" component={StudentDetailScreen} />
       <Stack.Screen name="SchoolTasks" component={SchoolTasksScreen} />
       <Stack.Screen name="Branding" component={BrandingScreen} />
+      <Stack.Screen name="Notifications" component={NotificationsScreen} />
     </Stack.Navigator>
   );
 }
