@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerChangeEvent } from '@react-native-community/datetimepicker';
 import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { TextInput } from '@/design-system/components/forms/TextInput';
@@ -66,10 +66,12 @@ export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: 
 
   const canSubmit = title.trim().length > 0 && !isLoading;
 
-  const handleDateChange = (_event: DateTimePickerEvent, selected?: Date) => {
+  const handleDateChange = (_event: DateTimePickerChangeEvent, selected: Date) => {
     if (Platform.OS === 'android') setShowDatePicker(false);
-    if (selected) setDeadlineDate(selected);
+    setDeadlineDate(selected);
   };
+
+  const handleDateDismiss = () => setShowDatePicker(false);
 
   const handleSubmit = () => {
     if (!canSubmit) return;
@@ -237,7 +239,8 @@ export function AddTaskModal({ visible, onClose, onSubmit, isLoading = false }: 
                   mode="date"
                   display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                   minimumDate={new Date()}
-                  onChange={handleDateChange}
+                  onValueChange={handleDateChange}
+                  onDismiss={handleDateDismiss}
                 />
               )}
               {showDatePicker && Platform.OS === 'ios' && (

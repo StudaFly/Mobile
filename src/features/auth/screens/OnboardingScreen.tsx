@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, { DateTimePickerChangeEvent } from '@react-native-community/datetimepicker';
 import { ScreenWrapper } from '@/design-system/components/layout/ScreenWrapper';
 import { Text } from '@/design-system/primitives/Text';
 import { Icon } from '@/design-system/primitives/Icon';
@@ -52,13 +52,13 @@ function DateField({ value, onChange }: DateFieldProps) {
   const [show, setShow] = useState(false);
   const [date, setDate] = useState<Date>(new Date());
 
-  const handleChange = (_event: DateTimePickerEvent, selected?: Date) => {
+  const handleValueChange = (_event: DateTimePickerChangeEvent, selected: Date) => {
     if (Platform.OS === 'android') setShow(false);
-    if (selected) {
-      setDate(selected);
-      onChange(formatDate(selected));
-    }
+    setDate(selected);
+    onChange(formatDate(selected));
   };
+
+  const handleDismiss = () => setShow(false);
 
   return (
     <View>
@@ -76,7 +76,8 @@ function DateField({ value, onChange }: DateFieldProps) {
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           textColor={Platform.OS === 'ios' ? 'white' : undefined}
           minimumDate={new Date()}
-          onChange={handleChange}
+          onValueChange={handleValueChange}
+          onDismiss={handleDismiss}
         />
       )}
       {show && Platform.OS === 'ios' && (

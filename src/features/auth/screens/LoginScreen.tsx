@@ -10,6 +10,7 @@ import { AuthStackParamList } from '@/navigation/types';
 import { OAuthButton } from '../components/OAuthButton';
 import { StudaFlyLogo } from '../components/StudaFlyLogo';
 import { useLogin, useOAuthLogin } from '../hooks/useLogin';
+import { isGoogleSignInCancelled } from '../services/googleSignIn.service';
 import { OAuthProvider } from '../types/auth.types';
 import { getApiErrorMessage } from '@/core/api/errors';
 
@@ -23,9 +24,15 @@ export function LoginScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
 
   const { mutate: login, isPending: loginPending, error: loginError } = useLogin();
-  const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
+  const {
+    mutate: oauthLogin,
+    isPending: oauthPending,
+    variables: oauthProvider,
+    error: oauthError,
+  } = useOAuthLogin();
 
   const isAnyLoading = loginPending || oauthPending;
+  const showOAuthError = oauthError && !isGoogleSignInCancelled(oauthError);
 
   const handleLogin = () => {
     if (!email.trim() || !password.trim()) return;
@@ -33,7 +40,11 @@ export function LoginScreen({ navigation }: Props) {
   };
 
   const handleOAuth = (provider: OAuthProvider) => {
-    oauthLogin({ provider, mockToken: `mock-${provider}-token` });
+    oauthLogin(provider, {
+      onSuccess: ({ isNewUser }) => {
+        if (isNewUser) navigation.navigate('CreateProfile');
+      },
+    });
   };
 
   return (
@@ -55,9 +66,14 @@ export function LoginScreen({ navigation }: Props) {
               key={provider}
               provider={provider}
               onPress={() => handleOAuth(provider)}
-              isLoading={oauthPending}
+              isLoading={oauthPending && oauthProvider === provider}
             />
           ))}
+          {showOAuthError ? (
+            <Text variant="caption" style={styles.oauthError}>
+              {getApiErrorMessage(oauthError)}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.dividerRow}>
@@ -134,6 +150,10 @@ const styles = StyleSheet.create({
   },
   oauthSection: {
     gap: spacing.sm,
+  },
+  oauthError: {
+    color: colors.danger,
+    textAlign: 'center',
   },
   dividerRow: {
     flexDirection: 'row',
