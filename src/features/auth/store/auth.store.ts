@@ -15,12 +15,21 @@ export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   token: null,
   role: null,
+  accountType: null,
   isAuthenticated: false,
   pendingUser: null,
   pendingToken: null,
 
   setUser: (user, token) =>
-    set({ user, token, role: user.role, isAuthenticated: true, pendingUser: null, pendingToken: null }),
+    set({
+      user,
+      token,
+      role: user.role,
+      accountType: user.accountType ?? 'student',
+      isAuthenticated: true,
+      pendingUser: null,
+      pendingToken: null,
+    }),
 
   setPendingAuth: (user, token) =>
     set({ pendingUser: user, pendingToken: token }),
@@ -32,6 +41,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             user: state.pendingUser,
             token: state.pendingToken,
             role: state.pendingUser.role,
+            accountType: state.pendingUser.accountType ?? 'student',
             isAuthenticated: true,
             pendingUser: null,
             pendingToken: null,
@@ -41,6 +51,14 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   clearAuth: () => {
     void secureStorage.clearTokens();
-    set({ user: null, token: null, role: null, isAuthenticated: false, pendingUser: null, pendingToken: null });
+    set({
+      user: null,
+      token: null,
+      role: null,
+      accountType: null,
+      isAuthenticated: false,
+      pendingUser: null,
+      pendingToken: null,
+    });
   },
 }));

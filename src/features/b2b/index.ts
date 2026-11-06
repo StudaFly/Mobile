@@ -8,4 +8,4 @@ export { SettingsScreen } from './screens/SettingsScreen';
 export { BrandingScreen } from './screens/BrandingScreen';
 export { useB2BDashboard } from './hooks/useB2BDashboard';
 export { useStudents } from './hooks/useStudents';
-export type { Institution, StudentSummary, Alert } from './types/admin.types';
+export type { StudentSummary, StudentDetail, OrgInfo, FollowUp } from './types/org.types';

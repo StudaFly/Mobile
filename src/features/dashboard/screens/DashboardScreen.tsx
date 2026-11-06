@@ -14,6 +14,7 @@ import { useDashboard } from '../hooks/useDashboard';
 import { WelcomeHeader } from '../components/WelcomeHeader';
 import { NextDeadlines } from '../components/NextDeadlines';
 import { GlobalProgress } from '../components/GlobalProgress';
+import { SchoolBanner } from '@/features/organization/components/SchoolBanner';
 
 const QUICK_ACCESS = [
   { key: 'Timeline', label: 'Timeline', iconName: 'Clock', bg: '#EEF2FF' },
@@ -92,6 +93,7 @@ export function DashboardScreen() {
         />
 
         <View style={styles.body}>
+          <SchoolBanner />
           <NextDeadlines
             tasks={nextTasks}
             onPressTask={() => navigation.navigate('Checklist')}

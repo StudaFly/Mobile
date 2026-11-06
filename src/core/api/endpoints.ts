@@ -11,6 +11,22 @@ export const ENDPOINTS = {
   // Users
   USERS_ME: '/users/me',
   USERS_ME_EXPORT: '/users/me/export',
+  USERS_ME_ORGANIZATION: '/users/me/organization',
+
+  // Schools (student side)
+  ORGANIZATION_BY_CODE: (code: string) => `/organizations/by-code/${encodeURIComponent(code)}`,
+  ORGANIZATION_JOIN: '/organizations/join',
+  INVITATION: (token: string) => `/invitations/${encodeURIComponent(token)}`,
+  INVITATION_ACCEPT: (token: string) => `/invitations/${encodeURIComponent(token)}/accept`,
+
+  // Organization space (international relations staff)
+  ORG: '/org',
+  ORG_MEMBERS: '/org/members',
+  ORG_STUDENTS: '/org/students',
+  ORG_STUDENT: (id: string) => `/org/students/${id}`,
+  ORG_STUDENT_NOTES: (id: string) => `/org/students/${id}/notes`,
+  ORG_ZONES: '/org/zones',
+  ORG_JOIN_CODE: '/org/join-code',
 
   // Mobilities
   MOBILITIES: '/mobilities',

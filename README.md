@@ -49,6 +49,17 @@ to do (tap it to retry).
 The app uses native modules (`expo-secure-store`, `react-native-mmkv`…): if Expo Go is not
 enough, use a development build (`npx expo run:ios` / `npx expo run:android`).
 
+## Spaces and deep links
+
+- `student`: the B2C app; Profil › "Mon établissement" joins a school with its code. The school branding
+  is shown on the dashboard.
+- `org_staff`: the B2B tabs (Dashboard, Étudiants, Alertes, Stats, Réglages), scoped by role; team and
+  perimeters are managed on the web (`EXPO_PUBLIC_WEB_URL`, default `http://localhost:5173`).
+- `platform_admin`: a screen pointing to the web administration (nothing admin on mobile).
+
+Invitation links open the app: `studafly://invitations/<token>` (development build) or, in Expo Go,
+`exp://<host>:8081/--/invitations/<token>`.
+
 ## Stack
 
 - React Native 0.86

@@ -7,6 +7,7 @@ export interface AuthResponse {
   user: AuthUser;
   accessToken: string;
   refreshToken: string;
+  mfaRequired?: boolean;
 }
 
 const OAUTH_ENDPOINTS: Record<OAuthProvider, string> = {
