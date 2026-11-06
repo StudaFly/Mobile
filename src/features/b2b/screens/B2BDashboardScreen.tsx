@@ -11,6 +11,7 @@ import { AlertBanner } from '../components/AlertBanner';
 import { OrgHeader } from '../components/OrgHeader';
 import { StudentProgressCard } from '../components/StudentProgressCard';
 import { useB2BDashboard } from '../hooks/useB2BDashboard';
+import { NotificationBellButton } from '@/features/notifications/components/NotificationBellButton';
 
 function Kpi({ label, value }: { label: string; value: number | string }) {
   return (
@@ -33,7 +34,10 @@ export function B2BDashboardScreen() {
         refreshControl={<RefreshControl refreshing={false} onRefresh={() => void dashboard.refetch()} />}
         contentContainerStyle={styles.scroll}
       >
-        <OrgHeader title="Tableau de bord" />
+        <OrgHeader
+          title="Tableau de bord"
+          action={<NotificationBellButton onPress={() => navigation.navigate('Notifications')} />}
+        />
         <View style={styles.content}>
           <AlertBanner danger={dashboard.danger.length} warning={dashboard.warning.length} />
           <View style={styles.kpis}>
