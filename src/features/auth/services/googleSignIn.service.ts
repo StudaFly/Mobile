@@ -9,7 +9,7 @@ import { env } from '@/core/config/env';
 /** The user closed the Google sheet: not an error worth showing. */
 export class GoogleSignInCancelledError extends Error {
   constructor() {
-    super('Connexion Google annulée');
+    super('Google sign-in cancelled by the user');
     this.name = 'GoogleSignInCancelledError';
   }
 }
@@ -18,7 +18,7 @@ let isConfigured = false;
 
 function ensureConfigured(): void {
   if (!env.GOOGLE_WEB_CLIENT_ID) {
-    throw new Error("La connexion Google n'est pas configurée.");
+    throw new Error('Google sign-in is not configured: GOOGLE_WEB_CLIENT_ID is missing');
   }
   if (isConfigured) return;
   GoogleSignin.configure({
@@ -47,8 +47,9 @@ function toReadableError(err: unknown): Error {
 export const googleSignInService = {
   /** Open the native Google account picker and return the ID token to send to the backend. */
   async getIdToken(): Promise<string> {
-    ensureConfigured();
     try {
+      // Inside the try so a missing config surfaces to the user as the generic French message.
+      ensureConfigured();
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       const response = await GoogleSignin.signIn();
       if (isCancelledResponse(response)) throw new GoogleSignInCancelledError();

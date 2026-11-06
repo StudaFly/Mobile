@@ -72,7 +72,7 @@ describe('googleSignInService', () => {
     mockEnv.GOOGLE_WEB_CLIENT_ID = '';
     const { googleSignInService } = loadService();
 
-    await expect(googleSignInService.getIdToken()).rejects.toThrow("n'est pas configurée");
+    await expect(googleSignInService.getIdToken()).rejects.toThrow('a échoué');
     expect(mockGoogleSignin.signIn).not.toHaveBeenCalled();
   });
 
