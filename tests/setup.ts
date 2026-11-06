@@ -30,3 +30,16 @@ jest.mock('expo-linking', () => ({
   createURL: (path: string) => `studafly://${path.replace(/^\//, '')}`,
   openURL: jest.fn(),
 }));
+
+jest.mock('expo-device', () => ({ __esModule: true, isDevice: true }));
+
+jest.mock('expo-notifications', () => ({
+  AndroidImportance: { DEFAULT: 3 },
+  setNotificationHandler: jest.fn(),
+  setNotificationChannelAsync: jest.fn(() => Promise.resolve()),
+  getPermissionsAsync: jest.fn(() => Promise.resolve({ granted: true, status: 'granted' })),
+  requestPermissionsAsync: jest.fn(() => Promise.resolve({ granted: true, status: 'granted' })),
+  getExpoPushTokenAsync: jest.fn(() => Promise.resolve({ data: 'ExponentPushToken[test-device]' })),
+  addNotificationReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  useLastNotificationResponse: jest.fn(() => null),
+}));

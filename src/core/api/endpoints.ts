@@ -28,6 +28,14 @@ export const ENDPOINTS = {
   ORG_ZONES: '/org/zones',
   ORG_JOIN_CODE: '/org/join-code',
 
+  // Notifications
+  NOTIFICATIONS: '/notifications',
+  NOTIFICATIONS_UNREAD_COUNT: '/notifications/unread-count',
+  NOTIFICATIONS_READ_ALL: '/notifications/read-all',
+  NOTIFICATION_BY_ID: (id: string) => `/notifications/${id}`,
+  NOTIFICATION_READ: (id: string) => `/notifications/${id}/read`,
+  PUSH_TOKENS: '/notifications/push-tokens',
+
   // Mobilities
   MOBILITIES: '/mobilities',
   MOBILITY_BY_ID: (id: string) => `/mobilities/${id}`,

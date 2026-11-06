@@ -1,11 +1,11 @@
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import type { CompositeNavigationProp } from '@react-navigation/native';
+import type { CompositeNavigationProp, NavigatorScreenParams } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   Auth: undefined;
-  B2C: undefined;
-  B2B: undefined;
+  B2C: NavigatorScreenParams<B2CStackParamList> | undefined;
+  B2B: NavigatorScreenParams<B2BStackParamList> | undefined;
   WebOnly: undefined;
   Invitation: { token: string };
 };
@@ -27,13 +27,14 @@ export type B2CTabParamList = {
 };
 
 export type B2CStackParamList = {
-  Tabs: undefined;
+  Tabs: NavigatorScreenParams<B2CTabParamList> | undefined;
   Documents: undefined;
   Guide: undefined;
   JourJ: undefined;
   EditProfile: undefined;
   CreateMobility: undefined;
   MyOrganization: undefined;
+  Notifications: undefined;
 };
 
 export type B2BTabParamList = {
@@ -45,10 +46,11 @@ export type B2BTabParamList = {
 };
 
 export type B2BStackParamList = {
-  Tabs: undefined;
+  Tabs: NavigatorScreenParams<B2BTabParamList> | undefined;
   StudentDetail: { studentId: string };
   SchoolTasks: undefined;
   Branding: undefined;
+  Notifications: undefined;
 };
 
 export type B2CNavigationProp = CompositeNavigationProp<

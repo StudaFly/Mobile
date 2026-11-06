@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ProgressBar } from '@/design-system/components/data-display/ProgressBar';
 import { Text } from '@/design-system/primitives/Text';
@@ -14,6 +14,8 @@ interface WelcomeHeaderProps {
   totalCount: number;
   onSeeAll?: () => void;
   onAvatarPress?: () => void;
+  /** Extra button shown next to the avatar (e.g. the notification bell). */
+  headerAction?: ReactNode;
 }
 
 function countdownLabel(days: number | null): { value: string; unit: string; caption: string } {
@@ -33,6 +35,7 @@ export function WelcomeHeader({
   totalCount,
   onSeeAll,
   onAvatarPress,
+  headerAction,
 }: WelcomeHeaderProps) {
   const countdown = countdownLabel(daysUntilDeparture);
 
@@ -46,6 +49,8 @@ export function WelcomeHeader({
           </Text>
           {subtitle ? <Text variant="caption" style={styles.subtitle}>{subtitle}</Text> : null}
         </View>
+        <View style={styles.actions}>
+        {headerAction}
         <TouchableOpacity
           style={styles.avatar}
           onPress={onAvatarPress}
@@ -54,6 +59,7 @@ export function WelcomeHeader({
         >
           <Text style={styles.avatarEmoji}>{avatarEmoji || '🎓'}</Text>
         </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.card}>
@@ -96,6 +102,7 @@ const styles = StyleSheet.create({
   },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   greeting: { flex: 1, gap: 2 },
+  actions: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   hello: { color: 'rgba(255,255,255,0.8)' },
   name: { color: colors.white },
   subtitle: { color: 'rgba(255,255,255,0.7)' },

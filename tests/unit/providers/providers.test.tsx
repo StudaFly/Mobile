@@ -4,6 +4,7 @@ import { render, renderHook } from '@testing-library/react-native';
 
 jest.mock('@react-navigation/native', () => ({
   NavigationContainer: ({ children }: { children: React.ReactNode }) => children,
+  createNavigationContainerRef: () => ({ isReady: () => false, navigate: jest.fn() }),
 }));
 jest.mock('@react-navigation/native-stack', () => ({
   createNativeStackNavigator: () => ({
@@ -58,7 +59,7 @@ describe('QueryProvider', () => {
 describe('NotificationProvider', () => {
   it('renders children', () => {
     const { getByText } = render(
-      <NotificationProvider><Text>notif child</Text></NotificationProvider>
+      <QueryProvider><NotificationProvider><Text>notif child</Text></NotificationProvider></QueryProvider>
     );
     expect(getByText('notif child')).toBeDefined();
   });

@@ -9,7 +9,6 @@ import { timelineService } from '../../src/features/timeline/services/timeline.s
 import { documentsService } from '../../src/features/documents/services/documents.service';
 import { guideService } from '../../src/features/guide/services/guide.service';
 import { userService } from '../../src/features/profile/services/user.service';
-import { notificationsService } from '../../src/features/notifications/services/notifications.service';
 
 import { useChecklist } from '../../src/features/checklist/hooks/useChecklist';
 import { useTaskMutation } from '../../src/features/checklist/hooks/useTaskMutation';
@@ -17,7 +16,6 @@ import { useTimeline } from '../../src/features/timeline/hooks/useTimeline';
 import { useDocuments } from '../../src/features/documents/hooks/useDocuments';
 import { useOfflineDocuments } from '../../src/features/documents/hooks/useOfflineDocuments';
 import { useJourJ } from '../../src/features/jourj/hooks/useJourJ';
-import { usePushNotifications } from '../../src/features/notifications/hooks/usePushNotifications';
 
 describe('Empty services', () => {
   it('checklistService is defined', () => {
@@ -42,10 +40,6 @@ describe('Empty services', () => {
 
   it('userService is defined', () => {
     expect(userService).toBeDefined();
-  });
-
-  it('notificationsService is defined', () => {
-    expect(notificationsService).toBeDefined();
   });
 });
 
@@ -86,7 +80,4 @@ describe('Empty hooks', () => {
     expect(() => useJourJ()).not.toThrow();
   });
 
-  it('usePushNotifications is callable', () => {
-    expect(() => usePushNotifications()).not.toThrow();
-  });
 });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuthStore, WebOnlyScreen } from '@/features/auth';
 import { InvitationScreen, useInvitationStore } from '@/features/organization';
@@ -16,9 +16,10 @@ import { clearLocalSession } from '@/features/auth/session';
 import { userService } from '@/features/profile/services/user.service';
 import { mobilityService } from '@/features/mobility/services/mobility.service';
 import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { navigationRef } from './navigationRef';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-export const navigationRef = createNavigationContainerRef<RootStackParamList>();
+export { navigationRef };
 
 export function RootNavigator() {
   const { isAuthenticated, accountType, setUser } = useAuthStore();
