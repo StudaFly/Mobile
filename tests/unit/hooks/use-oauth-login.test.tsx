@@ -87,7 +87,7 @@ describe('useOAuthLogin', () => {
   });
 
   it('does not call the API when the Google sign-in fails', async () => {
-    mockGetIdToken.mockRejectedValue(new Error('Google sign-in cancelled by the user'));
+    mockGetIdToken.mockRejectedValue(new Error('La connexion Google a échoué. Réessaie.'));
     const { result } = renderOAuthLogin();
 
     await act(async () => {
