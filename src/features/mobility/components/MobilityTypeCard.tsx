@@ -4,7 +4,7 @@ import { TouchableScale } from '@/design-system/primitives/TouchableScale';
 import { Text } from '@/design-system/primitives/Text';
 import { Icon } from '@/design-system/primitives/Icon';
 import { colors, radii, spacing } from '@/design-system/tokens';
-import { MobilityTypeOption } from '../types/auth.types';
+import type { MobilityTypeOption } from '@/features/auth';
 
 interface MobilityTypeCardProps {
   value: MobilityTypeOption;

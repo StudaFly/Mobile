@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Task, TaskCategory } from '../types/task.types';
 import { checklistService } from '../services/checklist.service';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { useMobilityStore } from '@/features/mobility';
 
 export const CHECKLIST_QUERY_KEY = 'checklist';
 

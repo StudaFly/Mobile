@@ -1,7 +1,7 @@
 import apiClient from '@/core/api/client';
 import { ENDPOINTS } from '@/core/api/endpoints';
 import { ApiResponse } from '@/core/api/types/api.types';
-import { AuthUser } from '@/features/auth/types/auth.types';
+import type { AuthUser } from '@/features/auth';
 
 export interface UpdateProfilePayload {
   firstName?: string;

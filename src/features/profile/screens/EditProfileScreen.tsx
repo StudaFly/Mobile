@@ -11,7 +11,8 @@ import { getApiErrorMessage } from '@/core/api/errors';
 import type { B2CNavigationProp } from '@/navigation/types';
 import { ProfileAvatar } from '../components/ProfileAvatar';
 import { useReference } from '@/core/reference';
-import { splitName, useProfile } from '../hooks/useProfile';
+import { splitName } from '@/features/auth';
+import { useProfile } from '../hooks/useProfile';
 
 export function EditProfileScreen() {
   const navigation = useNavigation<B2CNavigationProp>();

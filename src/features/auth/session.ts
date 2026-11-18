@@ -1,5 +1,5 @@
 import { queryClient } from '@/core/api/queryClient';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { useMobilityStore } from '@/features/mobility';
 import { authService } from './services/auth.service';
 import { useAuthStore } from './store/auth.store';
 

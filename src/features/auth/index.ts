@@ -3,6 +3,7 @@ export { useLogin, useOAuthLogin, useRegister } from './hooks/useLogin';
 export { useOnboarding, TOTAL_ONBOARDING_STEPS } from './hooks/useOnboarding';
 export { authService } from './services/auth.service';
 export { logout, clearLocalSession } from './session';
+export { splitName } from './utils';
 export type {
   AuthUser,
   UserRole,
@@ -17,10 +18,7 @@ export type {
 export { SplashScreen } from './screens/SplashScreen';
 export { LoginScreen } from './screens/LoginScreen';
 export { RegisterScreen } from './screens/RegisterScreen';
-export { CreateProfileScreen } from './screens/CreateProfileScreen';
 export { OnboardingScreen } from './screens/OnboardingScreen';
 export { OAuthButton } from './components/OAuthButton';
 export { OAuthLogo } from './components/OAuthLogo';
 export { StudaFlyLogo } from './components/StudaFlyLogo';
-export { MobilityTypeCard } from './components/MobilityTypeCard';
-export { OnboardingStep } from './components/OnboardingStep';

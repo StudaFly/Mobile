@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { timelineService } from '../services/timeline.service';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
-import { useMobility } from '@/features/mobility/hooks/useMobility';
+import { useMobilityStore, useMobility } from '@/features/mobility';
 import type { TimelineTask, TimelineFilter, TimelineGroup } from '../types/timeline.types';
 
 export const TIMELINE_QUERY_KEY = 'timeline';

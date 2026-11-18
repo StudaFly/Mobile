@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMobility } from '@/features/mobility/hooks/useMobility';
+import { useMobility } from '@/features/mobility';
 import { guideService } from '../services/guide.service';
 
 export const GUIDE_QUERY_KEY = 'guide';

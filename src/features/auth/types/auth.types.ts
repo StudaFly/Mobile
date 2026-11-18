@@ -31,7 +31,8 @@ export interface RegisterPayload {
 
 export interface OAuthLoginPayload {
   provider: OAuthProvider;
-  mockToken: string;
+  /** ID token issued by the provider, verified by the backend. */
+  idToken: string;
 }
 
 export interface CreateProfilePayload {

@@ -1,8 +1,5 @@
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { useActiveDestination } from '@/features/mobility/hooks/useActiveDestination';
-import { useMobility } from '@/features/mobility/hooks/useMobility';
-import { useProgress } from '@/features/mobility/hooks/useProgress';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { useAuthStore } from '@/features/auth';
+import { useActiveDestination, useMobility, useProgress, useMobilityStore } from '@/features/mobility';
 
 export function useDashboard() {
   const user = useAuthStore((s) => s.user);

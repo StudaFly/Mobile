@@ -64,7 +64,7 @@ describe('authService — error branches', () => {
       apiClient.post.mockRejectedValue(new Error('OAuth error'));
 
       await expect(
-        authService.oauthLogin({ provider: 'google', mockToken: 'bad-token' }),
+        authService.oauthLogin({ provider: 'google', idToken: 'bad-token' }),
       ).rejects.toThrow('OAuth error');
     });
 
@@ -72,7 +72,7 @@ describe('authService — error branches', () => {
       apiClient.post.mockRejectedValue(new Error('OAuth error'));
 
       await expect(
-        authService.oauthLogin({ provider: 'microsoft', mockToken: 'bad-token' }),
+        authService.oauthLogin({ provider: 'microsoft', idToken: 'bad-token' }),
       ).rejects.toThrow('OAuth error');
     });
 
@@ -80,7 +80,7 @@ describe('authService — error branches', () => {
       apiClient.post.mockRejectedValue(new Error('OAuth error'));
 
       await expect(
-        authService.oauthLogin({ provider: 'apple', mockToken: 'bad-token' }),
+        authService.oauthLogin({ provider: 'apple', idToken: 'bad-token' }),
       ).rejects.toThrow('OAuth error');
     });
   });

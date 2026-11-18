@@ -10,10 +10,9 @@ import { RootStackParamList } from './types';
 import { secureStorage } from '@/core/storage/secureStorage';
 import { onSessionExpired } from '@/core/api/client';
 import { getApiErrorStatus } from '@/core/api/errors';
-import { clearLocalSession } from '@/features/auth/session';
-import { userService } from '@/features/profile/services/user.service';
-import { mobilityService } from '@/features/mobility/services/mobility.service';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { clearLocalSession } from '@/features/auth';
+import { userService } from '@/features/profile';
+import { mobilityService, useMobilityStore } from '@/features/mobility';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

@@ -2,9 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { useAuthStore } from '../store/auth.store';
 import { OnboardingData } from '../types/auth.types';
-import { mobilityService, type DestinationSearchResult } from '@/features/mobility/services/mobility.service';
-import { formatDestination } from '@/features/mobility/utils';
-import { useMobilityStore } from '@/features/mobility/store/mobility.store';
+import { mobilityService, formatDestination, useMobilityStore, type DestinationSearchResult } from '@/features/mobility';
 
 export const TOTAL_ONBOARDING_STEPS = 4;
 

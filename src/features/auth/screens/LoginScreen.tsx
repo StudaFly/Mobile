@@ -23,7 +23,7 @@ export function LoginScreen({ navigation }: Props) {
   const [password, setPassword] = useState('');
 
   const { mutate: login, isPending: loginPending, error: loginError } = useLogin();
-  const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
+  const { mutate: oauthLogin, isPending: oauthPending, error: oauthError } = useOAuthLogin();
 
   const isAnyLoading = loginPending || oauthPending;
 
@@ -33,7 +33,7 @@ export function LoginScreen({ navigation }: Props) {
   };
 
   const handleOAuth = (provider: OAuthProvider) => {
-    oauthLogin({ provider, mockToken: `mock-${provider}-token` });
+    oauthLogin(provider);
   };
 
   return (
@@ -58,6 +58,11 @@ export function LoginScreen({ navigation }: Props) {
               isLoading={oauthPending}
             />
           ))}
+          {oauthError ? (
+            <Text variant="caption" style={styles.oauthError}>
+              {getApiErrorMessage(oauthError, 'La connexion a échoué. Réessaie.')}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.dividerRow}>
@@ -134,6 +139,10 @@ const styles = StyleSheet.create({
   },
   oauthSection: {
     gap: spacing.sm,
+  },
+  oauthError: {
+    color: colors.danger,
+    textAlign: 'center',
   },
   dividerRow: {
     flexDirection: 'row',

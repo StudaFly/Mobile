@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { MobilityTypeCard } from '../../../src/features/auth/components/MobilityTypeCard';
+import { MobilityTypeCard } from '../../../src/features/mobility/components/MobilityTypeCard';
 
 describe('MobilityTypeCard', () => {
   const defaultProps = {

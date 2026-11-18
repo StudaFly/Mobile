@@ -2,7 +2,7 @@ import apiClient from '@/core/api/client';
 import { ENDPOINTS } from '@/core/api/endpoints';
 import { ApiResponse } from '@/core/api/types/api.types';
 import { Destination, Mobility, MobilityProgress } from '../types/mobility.types';
-import { MobilityTypeOption } from '@/features/auth/types/auth.types';
+import type { MobilityTypeOption } from '@/features/auth';
 
 export interface DestinationSearchResult {
   id: string;

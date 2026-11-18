@@ -28,13 +28,13 @@ jest.mock('@react-navigation/native', () => ({
 
 // Auth feature components
 import { OAuthButton } from '../../../src/features/auth/components/OAuthButton';
-import { OnboardingStep } from '../../../src/features/auth/components/OnboardingStep';
-import { MobilityTypeCard } from '../../../src/features/auth/components/MobilityTypeCard';
+import { OnboardingStep } from '../../../src/features/mobility/components/OnboardingStep';
+import { MobilityTypeCard } from '../../../src/features/mobility/components/MobilityTypeCard';
 
 // Auth screens
 import { LoginScreen } from '../../../src/features/auth/screens/LoginScreen';
 import { RegisterScreen } from '../../../src/features/auth/screens/RegisterScreen';
-import { CreateProfileScreen } from '../../../src/features/auth/screens/CreateProfileScreen';
+import { CreateProfileScreen } from '../../../src/features/profile/screens/CreateProfileScreen';
 import { OnboardingScreen } from '../../../src/features/auth/screens/OnboardingScreen';
 import { SplashScreen } from '../../../src/features/auth/screens/SplashScreen';
 

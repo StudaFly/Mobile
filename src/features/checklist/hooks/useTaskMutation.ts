@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Task } from '../types/task.types';
 import { checklistService, CreateTaskPayload } from '../services/checklist.service';
 import { CHECKLIST_QUERY_KEY } from './useChecklist';
-import { PROGRESS_QUERY_KEY } from '@/features/mobility/hooks/useProgress';
+import { PROGRESS_QUERY_KEY } from '@/features/mobility';
 
 const TIMELINE_QUERY_KEY = 'timeline';
 

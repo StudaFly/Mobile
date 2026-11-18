@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { OnboardingStep } from '../../../src/features/auth/components/OnboardingStep';
+import { OnboardingStep } from '../../../src/features/mobility/components/OnboardingStep';
 
 describe('OnboardingStep', () => {
   it('renders title', () => {

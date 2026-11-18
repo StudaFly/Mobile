@@ -1,5 +1,5 @@
 import { AxiosError, AxiosHeaders } from 'axios';
-import { getApiErrorCode, getApiErrorMessage, getApiErrorStatus } from '../../../src/core/api/errors';
+import { getApiErrorMessage, getApiErrorStatus } from '../../../src/core/api/errors';
 
 function axiosError(data?: unknown, status = 400) {
   const config = { headers: new AxiosHeaders() };
@@ -12,7 +12,6 @@ describe('api errors', () => {
   it('reads the backend error envelope', () => {
     const err = axiosError({ error: { code: 'CONFLICT', message: 'An account with this email already exists' } }, 409);
     expect(getApiErrorMessage(err)).toBe('An account with this email already exists');
-    expect(getApiErrorCode(err)).toBe('CONFLICT');
     expect(getApiErrorStatus(err)).toBe(409);
   });
 

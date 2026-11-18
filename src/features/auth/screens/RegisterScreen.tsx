@@ -31,7 +31,7 @@ export function RegisterScreen({ navigation }: Props) {
   const [emailTouched, setEmailTouched] = useState(false);
   const [password, setPassword] = useState('');
 
-  const { mutate: oauthLogin, isPending: oauthPending } = useOAuthLogin();
+  const { mutate: oauthLogin, isPending: oauthPending, error: oauthError } = useOAuthLogin();
   const {
     mutate: register,
     isPending: registerPending,
@@ -53,7 +53,7 @@ export function RegisterScreen({ navigation }: Props) {
   };
 
   const handleOAuth = (provider: OAuthProvider) => {
-    oauthLogin({ provider, mockToken: `mock-${provider}-token` });
+    oauthLogin(provider);
   };
 
   useEffect(() => {
@@ -84,6 +84,11 @@ export function RegisterScreen({ navigation }: Props) {
               isLoading={oauthPending}
             />
           ))}
+          {oauthError ? (
+            <Text variant="caption" style={styles.oauthError}>
+              {getApiErrorMessage(oauthError, 'La connexion a échoué. Réessaie.')}
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.dividerRow}>
@@ -172,6 +177,10 @@ const styles = StyleSheet.create({
   },
   oauthSection: {
     gap: spacing.sm,
+  },
+  oauthError: {
+    color: colors.danger,
+    textAlign: 'center',
   },
   dividerRow: {
     flexDirection: 'row',

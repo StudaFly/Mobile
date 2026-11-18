@@ -67,23 +67,23 @@ describe('authService', () => {
     it('calls POST to Google OAuth endpoint', async () => {
       mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
 
-      await authService.oauthLogin({ provider: 'google', mockToken: 'mock-google-token' });
+      await authService.oauthLogin({ provider: 'google', idToken: 'mock-google-token' });
 
-      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_GOOGLE, { token: 'mock-google-token' });
+      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_GOOGLE, { idToken: 'mock-google-token' });
     });
 
     it('calls POST to Microsoft OAuth endpoint', async () => {
       mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
 
-      await authService.oauthLogin({ provider: 'microsoft', mockToken: 'mock-ms-token' });
+      await authService.oauthLogin({ provider: 'microsoft', idToken: 'mock-ms-token' });
 
-      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_MICROSOFT, { token: 'mock-ms-token' });
+      expect(mockPost).toHaveBeenCalledWith(ENDPOINTS.AUTH_OAUTH_MICROSOFT, { idToken: 'mock-ms-token' });
     });
 
     it('returns auth response on success', async () => {
       mockPost.mockResolvedValue({ data: { data: mockAuthResponse } });
 
-      const result = await authService.oauthLogin({ provider: 'apple', mockToken: 'mock-apple-token' });
+      const result = await authService.oauthLogin({ provider: 'apple', idToken: 'mock-apple-token' });
 
       expect(result.user.email).toBe('test@test.com');
       expect(result.accessToken).toBe('access123');

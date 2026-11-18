@@ -4,9 +4,9 @@ import {
   SplashScreen,
   LoginScreen,
   RegisterScreen,
-  CreateProfileScreen,
   OnboardingScreen,
 } from '@/features/auth';
+import { CreateProfileScreen } from '@/features/profile';
 import { AuthStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<AuthStackParamList>();

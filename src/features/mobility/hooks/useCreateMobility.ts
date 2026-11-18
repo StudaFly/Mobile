@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { OnboardingData } from '@/features/auth/types/auth.types';
+import type { OnboardingData } from '@/features/auth';
 import { mobilityService, type DestinationSearchResult } from '../services/mobility.service';
 import { formatDestination } from '../utils';
 import { useMobilityStore } from '../store/mobility.store';

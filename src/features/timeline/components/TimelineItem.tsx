@@ -4,7 +4,7 @@ import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import type { TimelineTask } from '../types/timeline.types';
-import { CATEGORY_META } from '@/features/checklist/categoryMeta';
+import { CATEGORY_META } from '@/features/checklist';
 import { useReference } from '@/core/reference';
 
 function formatDeadline(dateString: string): string {

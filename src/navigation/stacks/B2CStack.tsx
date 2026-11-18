@@ -4,7 +4,7 @@ import { DocumentsScreen } from '@/features/documents';
 import { GuideScreen } from '@/features/guide';
 import { JourJScreen } from '@/features/jourj';
 import { EditProfileScreen } from '@/features/profile';
-import { CreateMobilityScreen } from '@/features/mobility/screens/CreateMobilityScreen';
+import { CreateMobilityScreen } from '@/features/mobility';
 import { B2CTabNavigator } from '../tabs/B2CTabNavigator';
 import { B2CStackParamList } from '../types';
 

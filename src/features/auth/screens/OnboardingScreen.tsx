@@ -7,12 +7,10 @@ import { Icon } from '@/design-system/primitives/Icon';
 import { Button } from '@/design-system/components/actions/Button';
 import { TextInput } from '@/design-system/components/forms/TextInput';
 import { colors, radii, spacing } from '@/design-system/tokens';
-import { MobilityTypeCard } from '../components/MobilityTypeCard';
-import { OnboardingStep } from '../components/OnboardingStep';
 import { useOnboarding, TOTAL_ONBOARDING_STEPS } from '../hooks/useOnboarding';
 import { MobilityTypeOption } from '../types/auth.types';
 import { getApiErrorMessage } from '@/core/api/errors';
-import { DestinationPicker } from '@/features/mobility/components/DestinationPicker';
+import { DestinationPicker, MobilityTypeCard, OnboardingStep } from '@/features/mobility';
 import { useReference } from '@/core/reference';
 
 

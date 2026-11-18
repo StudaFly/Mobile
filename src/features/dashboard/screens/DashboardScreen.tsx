@@ -8,7 +8,7 @@ import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
 import { useReference } from '@/core/reference';
-import { splitName } from '@/features/profile/hooks/useProfile';
+import { splitName } from '@/features/auth';
 import type { B2CNavigationProp } from '@/navigation/types';
 import { useDashboard } from '../hooks/useDashboard';
 import { WelcomeHeader } from '../components/WelcomeHeader';

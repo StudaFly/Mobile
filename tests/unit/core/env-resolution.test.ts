@@ -8,9 +8,9 @@ jest.mock('expo-constants', () => ({
   },
 }));
 
-import { resolveApiUrl, resolveBaseUrl } from '../../../src/core/config/env';
+import { resolveApiUrl } from '../../../src/core/config/env';
 
-describe('resolveBaseUrl', () => {
+describe('resolveApiUrl', () => {
   const originalEnv = process.env.EXPO_PUBLIC_API_URL;
 
   beforeEach(() => {
@@ -26,18 +26,18 @@ describe('resolveBaseUrl', () => {
   it('prefers extra.BASE_URL from the app config', () => {
     mockExpoConfig.extra = { BASE_URL: 'https://api.studafly.com/api/v1' };
     process.env.EXPO_PUBLIC_API_URL = 'http://ignored';
-    expect(resolveBaseUrl()).toBe('https://api.studafly.com/api/v1');
+    expect(resolveApiUrl().url).toBe('https://api.studafly.com/api/v1');
   });
 
   it('then uses EXPO_PUBLIC_API_URL', () => {
     process.env.EXPO_PUBLIC_API_URL = 'http://10.0.2.2:8080/api/v1';
     mockExpoConfig.hostUri = '192.168.1.20:8081';
-    expect(resolveBaseUrl()).toBe('http://10.0.2.2:8080/api/v1');
+    expect(resolveApiUrl().url).toBe('http://10.0.2.2:8080/api/v1');
   });
 
   it('then targets the machine running Metro in development', () => {
     mockExpoConfig.hostUri = '192.168.1.20:8081';
-    expect(resolveBaseUrl()).toBe('http://192.168.1.20:8080/api/v1');
+    expect(resolveApiUrl().url).toBe('http://192.168.1.20:8080/api/v1');
   });
 
   it('falls back to localhost', () => {

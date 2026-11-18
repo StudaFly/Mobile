@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMobility } from '@/features/mobility/hooks/useMobility';
+import { useMobility } from '@/features/mobility';
 import { budgetService } from '../services/budget.service';
 
 export const BUDGET_QUERY_KEY = 'budget';

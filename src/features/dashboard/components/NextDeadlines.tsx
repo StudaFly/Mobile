@@ -3,8 +3,8 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Icon } from '@/design-system/primitives/Icon';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, shadows, spacing } from '@/design-system/tokens';
-import { CATEGORY_META } from '@/features/checklist/categoryMeta';
-import type { TimelineTask } from '@/features/timeline/types/timeline.types';
+import { CATEGORY_META } from '@/features/checklist';
+import type { TimelineTask } from '@/features/timeline';
 
 interface NextDeadlinesProps {
   tasks: TimelineTask[];

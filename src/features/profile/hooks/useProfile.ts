@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '@/features/auth/store/auth.store';
-import { clearLocalSession } from '@/features/auth/session';
+import { useAuthStore, clearLocalSession } from '@/features/auth';
 import { userService, type UpdateProfilePayload } from '../services/user.service';
 
 export function useProfile() {
@@ -25,7 +24,3 @@ export function useProfile() {
   return { user, updateProfile, deleteAccount };
 }
 
-export function splitName(name: string): { firstName: string; lastName: string } {
-  const [firstName = '', ...rest] = name.trim().split(/\s+/);
-  return { firstName, lastName: rest.join(' ') };
-}

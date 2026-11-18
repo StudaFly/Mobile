@@ -3,9 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import { Card } from '@/design-system/components/data-display/Card';
 import { Text } from '@/design-system/primitives/Text';
 import { colors, radii, spacing } from '@/design-system/tokens';
-import { CATEGORY_META } from '@/features/checklist/categoryMeta';
-import type { MobilityProgress } from '@/features/mobility/types/mobility.types';
-import type { TaskCategory } from '@/features/checklist/types/task.types';
+import { CATEGORY_META, type TaskCategory } from '@/features/checklist';
+import type { MobilityProgress } from '@/features/mobility';
 
 interface GlobalProgressProps {
   items: MobilityProgress['byCategory'];
